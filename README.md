@@ -39,7 +39,14 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 
 (A faire)
 
+## Construction du terminal
 
+L'arborescence une fois le build terminé sera sous cette forme:
+
+	- bash (Programme C)
+	- /lib/ (Dossier avec les differents programmes [cp, cd, ls, man, ...]
+	- /etc/ (Dossier avec les differentes ressources pour les programmes [En particulier le man dans /etc/man/])?
+	- bash_profile (Fichier de configuration pour le bash)?
 
 
 
