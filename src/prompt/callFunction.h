@@ -1,0 +1,1 @@
+int callFunction(const char *);
