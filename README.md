@@ -9,7 +9,8 @@ Le projet fonctionnel ainsi qu’un rapport technique doit être rendu (utiliser
 
 Il s’agit d’un Shell interactif en C. Le but est d’implémenter notre propre version de bash en C.
 
-Nous serons notés sur 
+Nous serons notés sur:
+ 
 	- Fonctionnement général de l’application (plantages…)
 	- La qualité du code (gestion mémoire…)
 	- Utilisation d’analyseurs statiques (cppchecker, frama-c,…)
