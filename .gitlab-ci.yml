@@ -2,9 +2,9 @@ image: gcc:5.3
 job1:
   stage: build
   script:
-    - bash make
-    - bash make clean
-    - bash make proper
+    - sh make
+    - sh make clean
+    - sh make proper
   only:
     - master
   tags:
