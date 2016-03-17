@@ -1,7 +1,7 @@
 # include <stdio.h>
 
-# define TAILLE_MAX 30
+# define TAILLE_MAX 1024
 
-void prompt(char *input) {
-	fgets(input, TAILLE_MAX*sizeof(char), stdin);
+char *prompt(char *input) {
+	return fgets(input, TAILLE_MAX*sizeof(char), stdin);
 }

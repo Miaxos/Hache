@@ -1,1 +1,1 @@
-void prompt(char *);
+char *prompt(char *);

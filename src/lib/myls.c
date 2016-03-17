@@ -37,7 +37,7 @@ int main(int argc,char *argv[])
 	}
 	if (!S_ISDIR(st.st_mode))
 	{
-		printf("%s doit être un répertoire\n",dir);
+		printf("%s doit Ãªtre un rÃ©pertoire\n",dir);
 		return(-1);
 	}
 
@@ -47,7 +47,7 @@ int main(int argc,char *argv[])
 		return(-1);
 	}
 
-	while (dptr=readdir(dirp))
+	while ((dptr = readdir(dirp)))
 	{
 		if (dir[strlen(dir)-1]=='/') sprintf(path,"%s%s",dir,dptr->d_name);
 		else sprintf(path,"%s/%s",dir,dptr->d_name);
@@ -82,7 +82,7 @@ int main(int argc,char *argv[])
 			groupInfo=getgrgid(st.st_gid);
 			printf(" %s",groupInfo->gr_name);
 
-			printf(" %8d",st.st_size);
+			printf(" %8lld",st.st_size);
 
 			timeInfo=localtime(&st.st_mtime);
 			printf(" %4d-%02d-%02d %02d:%02d",timeInfo->tm_year+1900,timeInfo->tm_mon+1,timeInfo->tm_mday,timeInfo->tm_hour,timeInfo->tm_min);
