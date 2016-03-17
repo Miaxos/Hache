@@ -1,5 +1,5 @@
 image: gcc:5.3
-job1:
+Build:
   stage: build
   script:
     - make
