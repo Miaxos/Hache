@@ -7,3 +7,5 @@ job1:
     - bash make proper
   only:
     - master
+  tags:
+    - docker
