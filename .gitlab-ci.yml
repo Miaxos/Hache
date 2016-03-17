@@ -3,8 +3,6 @@ job1:
   stage: build
   script:
     - make
-    - sh make clean
-    - sh make proper
   only:
     - master
   tags:
