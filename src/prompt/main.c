@@ -8,6 +8,8 @@
 int main() {
 	char input[TAILLE_MAX];
 
+	// Clear terminal
+
 	while (prompt(input) != NULL) {
 		callFunction(input);
 	}

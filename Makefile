@@ -20,8 +20,8 @@ DEST_LIB=./lib/
 # Builds
 all: ${DEST_BUILD} ${DEST_LIB} main.o prompt.o callFunction.o myls.o
 	gcc $(DEST_BUILD)main.o $(DEST_BUILD)prompt.o $(DEST_BUILD)callFunction.o -o $(EXEC)
-
 	gcc $(DEST_BUILD)myls.o -o $(DEST_LIB)myls
+#	gcc $(DEST_BUILD)myclear.o -o $(DEST_LIB)myclear
 
 clean:
 	rm -rf $(DEST_BUILD)*.o
@@ -53,5 +53,6 @@ callFunction.o: $(SRC_PROMPT)callFunction.c
 myls.o: $(SRC_LIB)myls.c
 	gcc -c $(SRC_LIB)myls.c -o $(DEST_BUILD)myls.o
 
-
+# myclear.o: $(SRC_LIB)myclear.c
+#	gcc -c $(SRC_LIB)myclear.c -o $(DEST_BUILD)myclear.o
 
