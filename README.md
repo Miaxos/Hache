@@ -1,5 +1,5 @@
 # Hache
-[![build status](https://gitlab.univ-nantes.fr/E158196C/Hache/badges/master/build.svg)](https://gitlab.univ-nantes.fr/ci/projects/11?ref=master)
+[![build status](https://gitlab.univ-nantes.fr/E158196C/Hache/badges/master/build.svg)](https://gitlab.univ-nantes.fr/E158196C/Hache?ref=master)
 
 ## Introduction
 
