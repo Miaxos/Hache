@@ -36,7 +36,7 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 
 ### Commandes usuelles
 
-(A faire)
+(A faire) (Youhou)
 
 ## Construction du terminal
 
