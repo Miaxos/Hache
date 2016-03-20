@@ -9,9 +9,12 @@ int main() {
 	char input[TAILLE_MAX];
 
 	// Clear terminal
+	printf("\033c" );
+	printf("prompt$ " );
 
 	while (prompt(input) != NULL) {
 		callFunction(input);
+		printf("prompt$ " );
 	}
 	return 0;
 }
