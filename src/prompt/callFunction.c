@@ -17,7 +17,11 @@ int callFunction(const char *function) {
 	int status = 0;
 
 	// On coupe la fonction
-
+	char *token = strtok(function, "|");
+	while(token) {
+        puts(token);
+        token = strtok(NULL, " ");
+    }
 	//printf(function);
 	sprintf(commande[0], "./lib/%s", function);
 	//puts(commande);
