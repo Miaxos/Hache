@@ -1,6 +1,10 @@
 # Hache
 [![build status](https://gitlab.univ-nantes.fr/E158196C/Hache/badges/master/build.svg)](https://gitlab.univ-nantes.fr/E158196C/Hache?ref=master)
 
+## Prérequis
+
+- GCC >= 5.3
+
 ## Introduction
 
 Hache, projet C à rentre pour le 08/04/2016 à 23h59.
