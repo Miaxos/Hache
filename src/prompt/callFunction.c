@@ -16,12 +16,15 @@ int callFunction(const char *function) {
 	char libdir[2048]; // Current Working Directory
 	int status = 0;
 
+
 	// On coupe la fonction
-	char *token = strtok(function, "|");
+	// On va le faire par ordre de priorité pour le découpage de la fonction
+	char *token = strtok(strdup(function), "|"); // function: const char*, on le transforme en char*
 	while(token) {
         puts(token);
         token = strtok(NULL, " ");
     }
+
 	//printf(function);
 	sprintf(commande[0], "./lib/%s", function);
 	//puts(commande);
