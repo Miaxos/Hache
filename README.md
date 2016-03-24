@@ -43,8 +43,8 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 Placez vos commandes (.c) dans le répertoire "commands".<br />
 Ajoutez au makefile, pour chaque commande "mycommande.c" :<br />
 
-mycommande.o: ./commands/mymycommande.c<br />
-&nbsp;&nbsp;&nbsp;&nbsp;gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall
+_mycommande.o: ./commands/mymycommande.c<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall_
 
 Commandes à faire au minimum :
 
@@ -68,19 +68,19 @@ L'arborescence une fois le build terminé sera sous cette forme:
 ## Mode d'emploi
 
 Pour compiler le programme :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;2) make
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make
 
 Pour supprimer les fichiers .o :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;2) make clean
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make clean
 
 Pour supprimer les fichiers .o et l'executable :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;2) make proper	
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make proper	
 
 Pour lancer le programme :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer dans le répertoire /bin/<br />
-&nbsp;&nbsp;&nbsp;&nbsp;2) ./test
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer dans le répertoire /bin/<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) ./test
 
 
