@@ -3,6 +3,7 @@
 
 #include "../inc/getInput.h"
 #include "../inc/functions.h"
+#include "../inc/socket.h"
 
 #define TAILLE_MAX 30
 
@@ -15,9 +16,9 @@ int main() {
 
 	char input[TAILLE_MAX], function[TAILLE_MAX];
 	printf("\033c");
-	while (1) {
+	printf(">>> ");
+	while (getInput(input) != NULL) {
 		printf(">>> ");
-		getInput(input);
 		if (isFunction(getFunctionName(input, function))) {
 			printf("Function does not exist. Type help to get help.\n");
 		} else callFunction(input);
@@ -26,13 +27,3 @@ int main() {
 }
 
 
-int createProcess() {
-/*
-Création de processus avec gestion d'
-*/
-	int pid;
-	// On fork
-	pid = fork();
-	return pid;
-
-}
