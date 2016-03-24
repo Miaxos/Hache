@@ -40,18 +40,20 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 
 ### Commandes usuelles (MERIEM et AXEL)
 
-Placez vos commandes (.c) dans le répertoire "commands".
-Ajoutez au makefile, pour chaque commande "mycommande.c" :
+Placez vos commandes (.c) dans le répertoire "commands".<br />
+Ajoutez au makefile, pour chaque commande "mycommande.c" :<br />
 
-mycommande.o: ./commands/mymycommande.c
-	gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall
+mycommande.o: ./commands/mymycommande.c<br />
+&nbsp;&nbsp;&nbsp;&nbsp;gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall
 
 Commandes à faire au minimum :
-	- ls
-	- cp
-	- mv
-	- mkdir
-	- clear (qui efface l'écran)
+
+- ls
+- cd
+- cp
+- mv
+- mkdir
+- clear (qui efface l'écran)
 
 ## Construction du terminal
 
@@ -65,20 +67,20 @@ L'arborescence une fois le build terminé sera sous cette forme:
 
 ## Mode d'emploi
 
-Pour compiler le programme :
-	1) Se placer à la racine du projet
-	2) make
+Pour compiler le programme :<br />
+&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2) make
 
-Pour supprimer les fichiers .o :
-	1) Se placer à la racine du projet
-	2) make clean
+Pour supprimer les fichiers .o :<br />
+&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2) make clean
 
-Pour supprimer les fichiers .o et l'executable :
-	1) Se placer à la racine du projet
-	2) make proper	
+Pour supprimer les fichiers .o et l'executable :<br />
+&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2) make proper	
 
-Pour lancer le programme :
-	1) Se placer dans le répertoire /bin/
-	2) ./test
+Pour lancer le programme :<br />
+&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer dans le répertoire /bin/<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2) ./test
 
 
