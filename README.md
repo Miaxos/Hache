@@ -48,6 +48,7 @@ _mycommande.o: ./commands/mymycommande.c<br />
 
 Commandes à faire au minimum :
 
+- help (qui affiche les commandes disponibles)
 - ls
 - cd
 - cp
@@ -57,7 +58,7 @@ Commandes à faire au minimum :
 
 ## Construction du terminal
 
-L'arborescence une fois le build terminé sera sous cette forme:
+L'arborescence du projet :
 
 	- /src/ contient les sources (.c) du shell
 	- /commands/ contient les sources (.c) des commandes [cp, cd, ls, man, ...]
@@ -75,7 +76,7 @@ Pour supprimer les fichiers .o :<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make clean
 
-Pour supprimer les fichiers .o et l'executable :<br />
+Pour supprimer les fichiers .o et les executables : (PENSER A LE FAIRE AVANT UN COMMIT)<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make proper	
 
