@@ -46,6 +46,7 @@ Ajoutez au makefile, pour chaque commande "mycommande.c" :<br />
 _mycommande.o: ./commands/mymycommande.c<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall_
 
+Il faut aussi rajouter la commande à la fin de la première ligne.
 Commandes à faire au minimum :
 
 - help (qui affiche les commandes disponibles)
