@@ -207,7 +207,7 @@ int parseCommande(char *commande, char **argv) {
 
 	while ((c=commande[i]) == ' ') i++;
 
-	while ((c = commande[i]) != '\0') {
+	while (((c = commande[i]) != '\0') && ((c = commande[i]) != '\n')) {
 		
 		if (c == ' ') {
 			newparam = 0;
@@ -222,6 +222,7 @@ int parseCommande(char *commande, char **argv) {
 		}
 		i++;
 	}
+	
 
 	return argc;
 }

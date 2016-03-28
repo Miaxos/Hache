@@ -14,15 +14,22 @@ int main() {
 	*/
 	// Code création du thread.
 
-	char input[TAILLE_MAX], function[TAILLE_MAX];
+	char input[TAILLE_MAX], **argv;
+	int i = 0;
+
+	argv = malloc(TAILLE_MAX*sizeof(char*));
+	for ( ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
+
 	printf("\033c");
 	do {
 		printf(">>> ");
 		getInput(input);
-		if (isFunction(getFunctionName(input, function))) {
+		parseCommande(input, argv);
+		if (isFunction(argv[0])) {
 			printf("Function does not exist. Type help to get help.\n");
 		} else callFunction(input);
 	} while(1);
+
 	return 0;
 }
 
