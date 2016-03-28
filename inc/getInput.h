@@ -1,1 +1,1 @@
-char* getInput(char *);
+void getInput(char *);

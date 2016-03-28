@@ -1,7 +1,7 @@
-int callFunction(const char *);
+int callFunction(const char **);
 char* getFunctionName(const char *, char *);
 int isFunction(const char *);
 int len(const char *);
-void inputTotab(char *, char **inputTab);
+void inputTotab(const char *, char **inputTab);
 int isDelimiter(char);
-int parseCommande(char*, char **);
+int parseCommande(const char *, char **);

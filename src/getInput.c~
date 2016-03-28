@@ -2,6 +2,8 @@
 
 # define TAILLE_MAX 30
 
-void getInput(char *input) {
+// Copie dans input ce que l'utilisateur à saisi
+char* getInput(char *input) {
 	fgets(input, TAILLE_MAX*sizeof(char), stdin);
+	return input;
 }

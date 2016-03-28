@@ -1,6 +1,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <unistd.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+
+# include "../inc/functions.h"
 
 # define TAILLE_MAX 30
 
@@ -24,10 +29,20 @@ char* getFunctionName(const char *function, char *function2) {
 	return function2;
 }
 
-int callFunction(const char *function) {
-	char function2[TAILLE_MAX];
-	sprintf(function2, "../commands/%s", function);
-	return system(function2);
+int callFunction(char **argv) {
+	char temp[TAILLE_MAX];
+	int status;
+	int i;
+	if (fork() == 0) {
+		// on est dans le fils
+		sprintf(temp, "../commands/%s", argv[0]);
+		strcpy(argv[0], temp);
+		status = execvp(temp, argv);
+	} else {
+		wait(&status);
+		printf("Done with status %i\n", status);
+	}
+	return status;
 }
 
 //	Renvoie la longueur d'une chaine
@@ -56,7 +71,7 @@ int isDelimiter(char c) {
 
 			maintenant resultat est : [[commande1][&&][commande2][|][commande4][&][\n][]...[]]
 */
-void inputTotab(char input[TAILLE_MAX], char inputTab[TAILLE_MAX][TAILLE_MAX]) {
+void inputTotab(const char *input, char **inputTab) {
 	enum Etats { Etat1,Etat2,Etat3,Etat4,Etat5,Etat6,Etat7,Etat8,Etat9,EtatF };
 
 	int i = 0, compteur = 0, compteur2 = 0;
@@ -201,7 +216,7 @@ void inputTotab(char input[TAILLE_MAX], char inputTab[TAILLE_MAX][TAILLE_MAX]) {
 		parseCommande(commande, argv) retourne le nombre d'argument (ici 3)
 		et argv devient ["myls","-a","/home/eliot"]
 */
-int parseCommande(char *commande, char **argv) {
+int parseCommande(const char *commande, char **argv) {
 	int i = 0, j = 0, k = 0, newparam = 0, argc = 0;
 	char c;
 
@@ -222,7 +237,7 @@ int parseCommande(char *commande, char **argv) {
 		}
 		i++;
 	}
-	
+	argv[j] = NULL;
 
 	return argc;
 }
