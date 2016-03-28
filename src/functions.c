@@ -192,3 +192,36 @@ void inputTotab(char input[TAILLE_MAX], char inputTab[TAILLE_MAX][TAILLE_MAX]) {
 	}
 
 }
+
+// Parseur de commandes
+/*
+	Exemple :
+		char *commande = "myls -a /home/eliot"
+		char **argv;
+		parseCommande(commande, argv) retourne le nombre d'argument (ici 3)
+		et argv devient ["myls","-a","/home/eliot"]
+*/
+int parseCommande(char *commande, char **argv) {
+	int i = 0, j = 0, k = 0, newparam = 0, argc = 0;
+	char c;
+
+	while ((c=commande[i]) == ' ') i++;
+
+	while ((c = commande[i]) != '\0') {
+		
+		if (c == ' ') {
+			newparam = 0;
+		} else {
+			if (newparam == 0) {
+				newparam = 1;
+				j++;
+				k = 0;
+				argc++;
+			}
+			argv[j-1][k++] = c;
+		}
+		i++;
+	}
+
+	return argc;
+}

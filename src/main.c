@@ -16,13 +16,14 @@ int main() {
 
 	char input[TAILLE_MAX], function[TAILLE_MAX];
 	printf("\033c");
-	printf(">>> ");
-	while (getInput(input) != NULL) {
+	do {
 		printf(">>> ");
+		getInput(input);
 		if (isFunction(getFunctionName(input, function))) {
 			printf("Function does not exist. Type help to get help.\n");
 		} else callFunction(input);
-	}
+	} while(1);
+
 	return 0;
 }
 
