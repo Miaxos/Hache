@@ -1,0 +1,9 @@
+image: gcc:5.3
+Build:
+  stage: build
+  script:
+    - make
+  only:
+    - master
+  tags:
+    - docker

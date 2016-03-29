@@ -1,0 +1,4 @@
+drwxr-xr-x 4 anthonygriffon staff      136 2016-03-24 14:58 .
+drwxr-xr-x 14 anthonygriffon staff      476 2016-03-24 14:57 ..
+-rwxr-xr-x 1 anthonygriffon staff    13288 2016-03-24 14:57 test
+-rw-r--r-- 1 anthonygriffon staff        0 2016-03-24 14:58 test.txt
