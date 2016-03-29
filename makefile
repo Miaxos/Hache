@@ -24,6 +24,9 @@ socket.o: ./src/socket.c
 myls.o: ./commands/myls.c
 	gcc -c ./commands/myls.c -o ./build/myls.o -w
 
+myls2.o: ./commands/myls2.c
+    gcc -c ./commands/myls2.c -o ./build/myls2.o -w
+
 mydu.o: ./commands/mydu.c
 	gcc -c ./commands/mydu.c -o ./build/mydu.o -w
 
