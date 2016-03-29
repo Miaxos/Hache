@@ -13,6 +13,7 @@
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon
 int isFunction(const char *function) {
 	if (!strcmp(function,"myls")) return 0;
+	if (!strcmp(function,"mydu")) return 0;
 	return 1;
 }
 
@@ -39,9 +40,8 @@ int callFunction(char **argv) {
 		status = execvp(temp, argv);
 	} else {
 		wait(&status);
-		printf("Done with status %i\n", status);
 	}
-	return status;
+	return WEXITSTATUS(status);
 }
 
 //	Renvoie la longueur d'une chaine

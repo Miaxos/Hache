@@ -21,7 +21,7 @@ int main() {
 	// Code création du thread.
 
 	char *input, **argv;
-	int i = 0;
+	int i = 0, status;
 
 	printf("\033c");
 
@@ -39,9 +39,10 @@ int main() {
 		getInput(input);
 		parseCommande(input, argv);
 		if (isFunction(argv[0])) {
-			printf("Function does not exist. Type help to get help.\n");
+			printf("Function %s does not exist. Type help to get help.\n", argv[0]);
 		} else {
-			callFunction(argv);
+			status = callFunction(argv);
+			printf("Done with status %i\n", WEXITSTATUS(status));
 		}
 		
 		for (i=0; i<TAILLE_MAX; i++) free(argv[i]);
