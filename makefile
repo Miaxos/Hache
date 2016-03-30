@@ -1,4 +1,4 @@
-all: test myls mydu
+all: test myls mydu myls2
 
 myls: myls.o
 	gcc -o ./commands/myls ./build/myls.o
@@ -27,6 +27,9 @@ myls.o: ./commands/myls.c
 myls2.o: ./commands/myls2.c
 	gcc -c ./commands/myls2.c -o ./build/myls2.o -w
 
+myls2: myls2.o
+	gcc -o ./commands/myls2 ./build/myls2.o
+
 mydu.o: ./commands/mydu.c
 	gcc -c ./commands/mydu.c -o ./build/mydu.o -w
 
@@ -34,4 +37,4 @@ clean:
 	rm -rf ./build/*.o
 
 proper: clean
-	rm -rf ./bin/test ./commands/myls
+	rm -rf ./bin/test ./commands/myls ./commands/mydu ./commands/myls2
