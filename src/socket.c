@@ -7,7 +7,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <string.h>
-
+#include <unistd.h> // Pour OS X
 
 int main( int argc, char *argv[] ) {
    int my_socket, new_socket, clilen;
