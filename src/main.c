@@ -23,33 +23,58 @@ int main() {
 	*/
 	// Code création du thread.
 
-	char *input, **argv;
-	int i = 0, status;
+	char *input, **argv, **tab;
+	int i = 0, status, j = 0, forceEnd = 0;
 
 	printf("\033c");
 
 
 	do {
+		//input		
 		input = malloc(TAILLE_MAX*sizeof(char));
-		argv = malloc(TAILLE_MAX*sizeof(char*));
-		for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
-		for (i=0 ; i<TAILLE_MAX; i++) {
-			memset(argv[i], '\0', TAILLE_MAX*sizeof(char));
-		}
 		memset(input, '\0', sizeof(char));
+
+		//tab
+		tab = malloc(TAILLE_MAX*sizeof(char*));
+		for (i=0 ; i<TAILLE_MAX; i++) tab[i] = malloc(TAILLE_MAX*sizeof(char));
+		for (i=0 ; i<TAILLE_MAX; i++) memset(tab[i], '\0', TAILLE_MAX*sizeof(char));
 
 		printf(">>> ");
 		getInput(input);
-		parseCommande(input, argv);
-		if (isFunction(argv[0])) {
-			printf("Function %s does not exist. Type help to get help.\n", argv[0]);
-		} else {
-			status = callFunction(argv);
-			printf("Done with status %i\n", WEXITSTATUS(status));
-		}
+		inputTotab(input, tab);
 		
-		for (i=0; i<TAILLE_MAX; i++) free(argv[i]);
-		free(argv);
+		while((tab[j][0] != '\n') && !forceEnd) {
+
+			//argv
+			argv = malloc(TAILLE_MAX*sizeof(char*));
+			for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
+			for (i=0 ; i<TAILLE_MAX; i++) memset(argv[i], '\0', TAILLE_MAX*sizeof(char));
+
+			parseCommande(tab[j], argv);
+
+			if (isFunction(argv[0])) {
+				if (!(strcmp(argv[0], "&&"))) {
+					if (status) forceEnd = 1;
+				} else if (!(strcmp(argv[0], "||"))) {
+					if (!status) forceEnd = 1;
+				} else {
+					printf("Function %s does not exist. Type help to get help.\n", argv[0]);
+				}
+			} else {
+
+				status = callFunction(argv);
+				//printf("Done with status %i\n", WEXITSTATUS(status));
+			}
+			for (i=0 ; i<TAILLE_MAX; i++) free(argv[i]);
+			free(argv);
+			j++;
+		}
+
+		j = 0;
+		forceEnd = 0;
+
+		for (i=0 ; i<TAILLE_MAX; i++) free(tab[i]);
+		free(tab);
 		free(input);
 
 	} while(1);
