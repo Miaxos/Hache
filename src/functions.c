@@ -10,10 +10,13 @@
 # define TAILLE_MAX 30
 
 
-//	Booléen qui renvoie 1 si la fonction existe, 0 sinon
+//	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
 int isFunction(const char *function) {
 	if (!strcmp(function,"myls")) return 0;
 	if (!strcmp(function,"mydu")) return 0;
+
+	if (!strcmp(function,"clear")) return 2;
+	if (!strcmp(function,"cd")) return 2;
 	return 1;
 }
 

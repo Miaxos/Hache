@@ -44,7 +44,8 @@ int main() {
 		inputTotab(input, tab);
 		
 		while((tab[j][0] != '\n') && !forceEnd) {
-
+			
+			printf("%s\n",tab[j]);
 			//argv
 			argv = malloc(TAILLE_MAX*sizeof(char*));
 			for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
@@ -52,7 +53,7 @@ int main() {
 
 			parseCommande(tab[j], argv);
 
-			if (isFunction(argv[0])) {
+			if (isFunction(argv[0]) == 1) {
 				if (!(strcmp(argv[0], "&&"))) {
 					if (status) forceEnd = 1;
 				} else if (!(strcmp(argv[0], "||"))) {
@@ -60,10 +61,25 @@ int main() {
 				} else {
 					printf("Function %s does not exist. Type help to get help.\n", argv[0]);
 				}
-			} else {
+			} else if(isFunction(argv[0]) == 0) {
 
 				status = callFunction(argv);
 				//printf("Done with status %i\n", WEXITSTATUS(status));
+			} else {
+				
+				if (!strcmp(tab[j],"clear")) {
+					printf("\033c");
+				}
+
+				if (!strcmp(tab[j],"cd")){
+					printf("Blbl\n");
+					printf("%s\n", argv[0]);
+					printf("Blbl\n");
+
+				}
+
+
+
 			}
 			for (i=0 ; i<TAILLE_MAX; i++) free(argv[i]);
 			free(argv);
