@@ -7,7 +7,7 @@
 
 # include "../inc/functions.h"
 
-# define TAILLE_MAX 30
+# define TAILLE_MAX 256
 
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash

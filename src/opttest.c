@@ -5,15 +5,17 @@
  */ 
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-int errflg = 0; 
-char * carg;
+int errflg = 1; 
 int cflag = 0;
 
 int main(int argc , char ** argv){
 
-  static void usage();
+  void usage();
   int c; 
+  char *carg;
   extern char * optarg; 
   extern int optind, opterr; 
   char * progname = argv[0];
@@ -41,8 +43,7 @@ int main(int argc , char ** argv){
     printf("%s\n", carg); 
 }      
 
-static void	
-usage(prog) char *prog;{
+void usage(char *prog) {
   
   fprintf(stderr, "usage: %s [-ab] [-c arg]\n", prog);
   exit(1);

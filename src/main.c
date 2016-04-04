@@ -14,7 +14,7 @@
 #include "../inc/functions.h"
 #include "../inc/socket.h"
 
-#define TAILLE_MAX 30
+#define TAILLE_MAX 256
 
 
 int main() {
@@ -45,7 +45,7 @@ int main() {
 		
 		while((tab[j][0] != '\n') && !forceEnd) {
 			
-			printf("%s\n",tab[j]);
+			// printf("%s\n",tab[j]);
 			//argv
 			argv = malloc(TAILLE_MAX*sizeof(char*));
 			for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
@@ -71,10 +71,12 @@ int main() {
 					printf("\033c");
 				}
 
-				if (!strcmp(tab[j],"cd")){
+				if (!strcmp(argv[0],"cd")){
+
+					// execvp("/Users/anthonygriffon/Desktop/Hache/commands/myls", argv);
+					printf("%s\n",argv[1]);
 					printf("Blbl\n");
-					printf("%s\n", argv[0]);
-					printf("Blbl\n");
+
 
 				}
 
