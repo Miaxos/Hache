@@ -17,6 +17,7 @@ int isFunction(const char *function) {
 
 	if (!strcmp(function,"clear")) return 2;
 	if (!strcmp(function,"cd")) return 2;
+	if (!strcmp(function,"exit")) return 2;
 	return 1;
 }
 
@@ -33,14 +34,34 @@ char* getFunctionName(const char *function, char *function2) {
 	return function2;
 }
 
-int callFunction(char **argv) {
+int callFunction(char **argv, char *workingdirlib) {
 	char temp[TAILLE_MAX];
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "../commands/%s", argv[0]);
+		sprintf(temp, "%s/commands/%s", workingdirlib, argv[0]);
+		if (access(temp, F_OK ) != 0)
+		{
+			sprintf(temp, "/bin/%s", argv[0]);
+			if (access(temp, F_OK ) != 0)
+			{
+				sprintf(temp, "/usr/local/bin/%s", argv[0]);
+				if (access(temp, F_OK ) != 0)
+				{
+					sprintf(temp, "/usr/bin/%s", argv[0]);
+					if (access(temp, F_OK ) != 0)
+					{
+						sprintf(temp, "/sbin/%s", argv[0]);
+					}
+				}
+			}
+		}
 		strcpy(argv[0], temp);
-		status = execvp(temp, argv);
+		// printf("%d\n",access(temp, F_OK )); // -1 = pas acces 0 = acces
+		if (access(temp,F_OK)==0)
+		{
+			status = execvp(temp, argv);
+		}
 	} else {
 		wait(&status);
 	}

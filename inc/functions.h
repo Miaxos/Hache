@@ -1,4 +1,4 @@
-int callFunction(char **);
+int callFunction(char **, char *);
 char* getFunctionName(const char *, char *);
 int isFunction(const char *);
 int len(const char *);

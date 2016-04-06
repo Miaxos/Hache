@@ -26,11 +26,12 @@ int main() {
 
 	char *input, **argv, **tab;
 	int i = 0, status, j = 0, forceEnd = 0;
-	chdir("../commands/");
+	chdir("../");
 	printf("\033c");
 	char workingdir[1024];
-
-
+	char workingdirlib[1024];
+	getcwd(workingdirlib, 1024);
+	chdir("bin");
 	do {
 		//input		
 		input = malloc(TAILLE_MAX*sizeof(char));
@@ -59,17 +60,18 @@ int main() {
 
 			parseCommande(tab[j], argv);
 
-			if (isFunction(argv[0]) == 1) {
-				if (!(strcmp(argv[0], "&&"))) {
-					if (status) forceEnd = 1;
-				} else if (!(strcmp(argv[0], "||"))) {
-					if (!status) forceEnd = 1;
-				} else {
-					printf("Function %s does not exist. Type help to get help.\n", argv[0]);
-				}
-			} else if(isFunction(argv[0]) == 0) {
+			// if (isFunction(argv[0]) == 1) {
+			// 	if (!(strcmp(argv[0], "&&"))) {
+			// 		if (status) forceEnd = 1;
+			// 	} else if (!(strcmp(argv[0], "||"))) {
+			// 		if (!status) forceEnd = 1;
+			// 	} else {
+			// 		printf("Function %s does not exist. Type help to get help.\n", argv[0]);
+			// 	}
+			// } else 
+			if(isFunction(argv[0]) != 2) {
 
-				status = callFunction(argv);
+				status = callFunction(argv, workingdirlib);
 				//printf("Done with status %i\n", WEXITSTATUS(status));
 			} else {
 				
@@ -77,11 +79,17 @@ int main() {
 					printf("\033c");
 				}
 
+				if (!strcmp(tab[j],"exit")) {
+					exit(1);
+				}
+
 				if (!strcmp(argv[0],"cd")){
-					
-					if(chdir(argv[1])!=0){
-			          perror("Error:");
-			        }
+					if(argv[1] != NULL)
+					{
+						if(chdir(argv[1])!=0){
+				          perror("Erreur:");
+				        }
+				    }
 				}
 
 
