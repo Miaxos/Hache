@@ -39,8 +39,11 @@ int main() {
 		for (i=0 ; i<TAILLE_MAX; i++) tab[i] = malloc(TAILLE_MAX*sizeof(char));
 		for (i=0 ; i<TAILLE_MAX; i++) memset(tab[i], '\0', TAILLE_MAX*sizeof(char));
 
-		printf(">>> ");
-		getInput(input);
+		do {
+			printf(">>> ");
+			getInput(input);
+		} while (input[0] == '\n');
+
 		inputTotab(input, tab);
 		
 		while((tab[j][0] != '\n') && !forceEnd) {
