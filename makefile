@@ -8,7 +8,7 @@ ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 
 
-all: test myls mydu myls2
+all: test myls mydu
 
 myls: myls.o
 	gcc -o ./commands/myls ./build/myls.o
