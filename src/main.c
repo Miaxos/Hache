@@ -7,7 +7,8 @@
 #include <stdlib.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <unistd.h> // Pour OS X
+#include <unistd.h>
+
 
 
 #include "../inc/getInput.h"
@@ -25,8 +26,9 @@ int main() {
 
 	char *input, **argv, **tab;
 	int i = 0, status, j = 0, forceEnd = 0;
-
+	chdir("../commands/");
 	printf("\033c");
+	char workingdir[1024];
 
 
 	do {
@@ -40,7 +42,8 @@ int main() {
 		for (i=0 ; i<TAILLE_MAX; i++) memset(tab[i], '\0', TAILLE_MAX*sizeof(char));
 
 		do {
-			printf(">>> ");
+			getcwd(workingdir, 1024);
+			printf("prompt1.0: %s> ",workingdir);
 			getInput(input);
 		} while (input[0] == '\n');
 
@@ -75,12 +78,10 @@ int main() {
 				}
 
 				if (!strcmp(argv[0],"cd")){
-
-					// execvp("/Users/anthonygriffon/Desktop/Hache/commands/myls", argv);
-					printf("%s\n",argv[1]);
-					printf("Blbl\n");
-
-
+					
+					if(chdir(argv[1])!=0){
+			          perror("Error:");
+			        }
 				}
 
 
