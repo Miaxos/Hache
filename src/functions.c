@@ -12,12 +12,20 @@
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
 int isFunction(const char *function) {
+	// printf("isfunction\n");
+	// printf("%s\n",function);
 	if (!strcmp(function,"myls")) return 0;
 	if (!strcmp(function,"mydu")) return 0;
 
 	if (!strcmp(function,"clear")) return 2;
 	if (!strcmp(function,"cd")) return 2;
 	if (!strcmp(function,"exit")) return 2;
+
+	
+	if (!strcmp(function, "&")) return 6;
+	if (!strcmp(function, "|")) return 5;
+	if (!strcmp(function, "||")) return 4;
+	if (!strcmp(function, "&&")) return 3;
 	return 1;
 }
 
@@ -62,9 +70,16 @@ int callFunction(char **argv, char *workingdirlib) {
 		{
 			status = execvp(temp, argv);
 		}
+		else
+		{
+			perror("Erreur ");
+		}
+		exit(1);
 	} else {
 		wait(&status);
 	}
+	printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
+	// WEXITSTATUS: 0 : OK 1: ERROR
 	return WEXITSTATUS(status);
 }
 
@@ -105,7 +120,7 @@ void inputTotab(const char *input, char **inputTab) {
 	while (!fini) {
 		switch (curEtat) {
 		case Etat1 :
-			c = input[i++]; //printf("%c", c);
+			c = input[i++]; // printf("%c\n", c);
 			if (!(isDelimiter(c))) {
 				inputTab[compteur][compteur2++] = c;
 			} else {
@@ -196,7 +211,7 @@ void inputTotab(const char *input, char **inputTab) {
 			}
 			break;
 		case Etat8 :
-			c = input[i++]; //printf("%c", c);
+			c = input[i++]; // printf("\n%d\n", c);
 			if (!(isDelimiter(c))) {
 				inputTab[compteur][compteur2++] = '\0';
 				compteur2 = 0;
@@ -207,6 +222,7 @@ void inputTotab(const char *input, char **inputTab) {
 				inputTab[compteur][compteur2++] = c;
 				curEtat = Etat7;
 			} else if (c=='\n') {
+				// printf("BLBL\n");
 				compteur++;
 				inputTab[compteur][compteur2++] = c;
 				inputTab[compteur][compteur2++] = '\0';
@@ -225,6 +241,8 @@ void inputTotab(const char *input, char **inputTab) {
 			break;
 		case EtatF :
 			fini = 1;
+			//printf("fin parse\n");
+			// printf("compteur: %d\n", compteur);
 			break;
 		}
 	}

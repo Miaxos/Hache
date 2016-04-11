@@ -24,7 +24,7 @@ int main() {
 	*/
 	// Code création du thread.
 
-	char *input, **argv, **tab;
+	char *input, **argv, **tab, **argv2;
 	int i = 0, status, j = 0, forceEnd = 0;
 	chdir("../");
 	printf("\033c");
@@ -32,6 +32,10 @@ int main() {
 	char workingdirlib[1024];
 	getcwd(workingdirlib, 1024);
 	chdir("bin");
+	int skip = 0;
+	int andmode = 0;
+
+
 	do {
 		//input		
 		input = malloc(TAILLE_MAX*sizeof(char));
@@ -49,29 +53,49 @@ int main() {
 		} while (input[0] == '\n');
 
 		inputTotab(input, tab);
-		
-		while((tab[j][0] != '\n') && !forceEnd) {
+
+		while((tab[j][0] != '\n') && !forceEnd && (tab[j][0] != 0)) {
 			
-			// printf("%s\n",tab[j]);
+
+			//printf("tab %d (%d)\n",j, tab[j][0]);
 			//argv
 			argv = malloc(TAILLE_MAX*sizeof(char*));
 			for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
 			for (i=0 ; i<TAILLE_MAX; i++) memset(argv[i], '\0', TAILLE_MAX*sizeof(char));
 
-			parseCommande(tab[j], argv);
+			argv2 = malloc(TAILLE_MAX*sizeof(char*));
+			for (i=0 ; i<TAILLE_MAX; i++) argv2[i] = malloc(TAILLE_MAX*sizeof(char));
+			for (i=0 ; i<TAILLE_MAX; i++) memset(argv2[i], '\0', TAILLE_MAX*sizeof(char));
 
-			// if (isFunction(argv[0]) == 1) {
-			// 	if (!(strcmp(argv[0], "&&"))) {
-			// 		if (status) forceEnd = 1;
-			// 	} else if (!(strcmp(argv[0], "||"))) {
-			// 		if (!status) forceEnd = 1;
-			// 	} else {
-			// 		printf("Function %s does not exist. Type help to get help.\n", argv[0]);
-			// 	}
-			// } else 
-			if(isFunction(argv[0]) != 2) {
+
+			parseCommande(tab[j], argv);
+			if (tab[j+1][0] != '\n' && tab[j+1][0]!=0 )
+			{
+				parseCommande(tab[j+1], argv2);
+				if (isFunction(tab[j+1])==3) // &&
+					// Done
+				{
+					andmode = 1;
+				}
+				else if (isFunction(tab[j+1])==4) // ||
+					// Done
+				{
+					andmode = 2;
+				}
+				else if (isFunction(tab[j+1])==5) // |
+				{
+					andmode = 3;
+				}
+				else if (isFunction(tab[j+1])==6) // &
+				{
+					andmode = 4;
+				}
+			}
+
+			if(isFunction(argv[0]) != 2 && isFunction(argv[0]) < 3 && skip == 0) {
 
 				status = callFunction(argv, workingdirlib);
+
 				//printf("Done with status %i\n", WEXITSTATUS(status));
 			} else {
 				
@@ -86,20 +110,48 @@ int main() {
 				if (!strcmp(argv[0],"cd")){
 					if(argv[1] != NULL)
 					{
-						if(chdir(argv[1])!=0){
+						status = chdir(argv[1]);
+						if(status!=0){
 				          perror("Erreur:");
 				        }
 				    }
 				}
-
-
+			}
+			switch(andmode) {
+				case 1: // &&
+					switch(status) {
+						case 0:
+							break;
+						default:
+							skip = 3;
+							break;
+					}
+					andmode = 0;
+					break;
+				case 2: // ||
+					switch(status) {
+						case 0:
+							skip = 3;
+							break;
+						default:
+							break;
+					}
+					andmode = 0;
+					break;
 
 			}
+			if (skip > 0) {
+				skip--;
+			}
+
 			for (i=0 ; i<TAILLE_MAX; i++) free(argv[i]);
 			free(argv);
+			for (i=0 ; i<TAILLE_MAX; i++) free(argv2[i]);
+			free(argv2);
 			j++;
 		}
-
+		skip = 0;
+		andmode = 0;
 		j = 0;
 		forceEnd = 0;
 
