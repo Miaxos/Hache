@@ -7,13 +7,29 @@
 
 # include "../inc/functions.h"
 
-# define TAILLE_MAX 30
+# define TAILLE_MAX 256
 
 
-//	Booléen qui renvoie 1 si la fonction existe, 0 sinon
+//	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
 int isFunction(const char *function) {
 	if (!strcmp(function,"myls")) return 0;
 	if (!strcmp(function,"mydu")) return 0;
+
+	if (!strcmp(function,"clear")) return 2; // Done
+	if (!strcmp(function,"cd")) return 2; // Done mais erreurs à gérer
+	if (!strcmp(function,"exit")) return 2; // Done
+	// Connect (AG: je m'en occupe)
+
+	if (!strcmp(function, "<<")) return 10; // A faire
+	if (!strcmp(function, "<")) return 9; // A faire
+
+	if (!strcmp(function, ">>")) return 8; // Done mais deg'
+	if (!strcmp(function, ">")) return 7; // Done mais deg'
+
+	if (!strcmp(function, "&")) return 6; // A faire
+	if (!strcmp(function, "|")) return 5; // A faire
+	if (!strcmp(function, "||")) return 4; // Done mais deg'
+	if (!strcmp(function, "&&")) return 3; // Done mais deg'
 	return 1;
 }
 
@@ -30,17 +46,44 @@ char* getFunctionName(const char *function, char *function2) {
 	return function2;
 }
 
-int callFunction(char **argv) {
+int callFunction(char **argv, char *workingdirlib) {
 	char temp[TAILLE_MAX];
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "../commands/%s", argv[0]);
+		sprintf(temp, "%s/commands/%s", workingdirlib, argv[0]);
+		if (access(temp, F_OK ) != 0)
+		{
+			sprintf(temp, "/bin/%s", argv[0]);
+			if (access(temp, F_OK ) != 0)
+			{
+				sprintf(temp, "/usr/local/bin/%s", argv[0]);
+				if (access(temp, F_OK ) != 0)
+				{
+					sprintf(temp, "/usr/bin/%s", argv[0]);
+					if (access(temp, F_OK ) != 0)
+					{
+						sprintf(temp, "/sbin/%s", argv[0]);
+					}
+				}
+			}
+		}
 		strcpy(argv[0], temp);
-		status = execvp(temp, argv);
+		// printf("%d\n",access(temp, F_OK )); // -1 = pas acces 0 = acces
+		if (access(temp,F_OK)==0)
+		{
+			status = execvp(temp, argv);
+		}
+		else
+		{
+			perror("Erreur ");
+		}
+		exit(1);
 	} else {
 		wait(&status);
 	}
+	printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
+	// WEXITSTATUS: 0 : OK 1: ERROR
 	return WEXITSTATUS(status);
 }
 
@@ -81,7 +124,7 @@ void inputTotab(const char *input, char **inputTab) {
 	while (!fini) {
 		switch (curEtat) {
 		case Etat1 :
-			c = input[i++]; //printf("%c", c);
+			c = input[i++]; // printf("%c\n", c);
 			if (!(isDelimiter(c))) {
 				inputTab[compteur][compteur2++] = c;
 			} else {
@@ -172,7 +215,7 @@ void inputTotab(const char *input, char **inputTab) {
 			}
 			break;
 		case Etat8 :
-			c = input[i++]; //printf("%c", c);
+			c = input[i++]; // printf("\n%d\n", c);
 			if (!(isDelimiter(c))) {
 				inputTab[compteur][compteur2++] = '\0';
 				compteur2 = 0;
@@ -183,6 +226,7 @@ void inputTotab(const char *input, char **inputTab) {
 				inputTab[compteur][compteur2++] = c;
 				curEtat = Etat7;
 			} else if (c=='\n') {
+				// printf("BLBL\n");
 				compteur++;
 				inputTab[compteur][compteur2++] = c;
 				inputTab[compteur][compteur2++] = '\0';
@@ -201,6 +245,8 @@ void inputTotab(const char *input, char **inputTab) {
 			break;
 		case EtatF :
 			fini = 1;
+			//printf("fin parse\n");
+			// printf("compteur: %d\n", compteur);
 			break;
 		}
 	}

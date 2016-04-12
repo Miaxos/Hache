@@ -4,10 +4,11 @@
 # include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+# include <linux/limits.h>
 
 # include "../inc/functions.h"
 
-# define TAILLE_MAX 30
+# define TAILLE_MAX 60
 
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon
@@ -31,16 +32,19 @@ char* getFunctionName(const char *function, char *function2) {
 }
 
 int callFunction(char **argv) {
+	char *currentwd = malloc(PATH_MAX);
+	getcwd(currentwd, PATH_MAX);
 	char temp[TAILLE_MAX];
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "../commands/%s", argv[0]);
+		sprintf(temp, "%s/../commands/%s", currentwd, argv[0]);
+		printf("current path : %s\n", currentwd);
+		free(currentwd);
 		strcpy(argv[0], temp);
 		status = execvp(temp, argv);
 	} else {
 		wait(&status);
-		printf("Done with status %i\n", WEXITSTATUS(status));
 	}
 	return WEXITSTATUS(status);
 }

@@ -49,7 +49,8 @@ _mycommande.o: ./commands/mymycommande.c<br />
 _mycommande: mycommande.o<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc -o ./commands/mycommande ./build/mycommande.o_
 
-Il faut aussi rajouter la commande à la fin de la première ligne.
+Il faut aussi rajouter la commande à la fin de la première ligne du makefile.<br />
+Il faut aussi bien sur l'ajouter dans la fonction isFunction de functions.c<br />
 Commandes à faire au minimum :
 
 - help (qui affiche les commandes disponibles)
