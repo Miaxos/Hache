@@ -97,10 +97,12 @@ int main() {
 					andmode = 4;
 				}
 				else if (isFunction(tab[j+1])==7) // >
+					// Done
 				{
 					andmode = 5;
 				}
 				else if (isFunction(tab[j+1])==8) // >>
+					// Done
 				{
 					andmode = 6;
 				}

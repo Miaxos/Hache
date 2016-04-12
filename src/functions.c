@@ -12,22 +12,24 @@
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
 int isFunction(const char *function) {
-	// printf("isfunction\n");
-	// printf("%s\n",function);
 	if (!strcmp(function,"myls")) return 0;
 	if (!strcmp(function,"mydu")) return 0;
 
-	if (!strcmp(function,"clear")) return 2;
-	if (!strcmp(function,"cd")) return 2;
-	if (!strcmp(function,"exit")) return 2;
+	if (!strcmp(function,"clear")) return 2; // Done
+	if (!strcmp(function,"cd")) return 2; // Done mais erreurs à gérer
+	if (!strcmp(function,"exit")) return 2; // Done
+	// Connect (AG: je m'en occupe)
 
+	if (!strcmp(function, "<<")) return 10; // A faire
+	if (!strcmp(function, "<")) return 9; // A faire
 
-	if (!strcmp(function, ">>")) return 8;
-	if (!strcmp(function, ">")) return 7;
-	if (!strcmp(function, "&")) return 6;
-	if (!strcmp(function, "|")) return 5;
-	if (!strcmp(function, "||")) return 4;
-	if (!strcmp(function, "&&")) return 3;
+	if (!strcmp(function, ">>")) return 8; // Done mais deg'
+	if (!strcmp(function, ">")) return 7; // Done mais deg'
+
+	if (!strcmp(function, "&")) return 6; // A faire
+	if (!strcmp(function, "|")) return 5; // A faire
+	if (!strcmp(function, "||")) return 4; // Done mais deg'
+	if (!strcmp(function, "&&")) return 3; // Done mais deg'
 	return 1;
 }
 
