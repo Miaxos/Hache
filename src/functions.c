@@ -21,7 +21,9 @@ int isFunction(const char *function) {
 	if (!strcmp(function,"cd")) return 2;
 	if (!strcmp(function,"exit")) return 2;
 
-	
+
+	if (!strcmp(function, ">>")) return 8;
+	if (!strcmp(function, ">")) return 7;
 	if (!strcmp(function, "&")) return 6;
 	if (!strcmp(function, "|")) return 5;
 	if (!strcmp(function, "||")) return 4;

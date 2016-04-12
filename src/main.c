@@ -8,7 +8,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <unistd.h>
-
+#include <fcntl.h>
 
 
 #include "../inc/getInput.h"
@@ -16,6 +16,7 @@
 #include "../inc/socket.h"
 
 #define TAILLE_MAX 256
+
 
 
 int main() {
@@ -34,6 +35,10 @@ int main() {
 	chdir("bin");
 	int skip = 0;
 	int andmode = 0;
+	int redirectionmode = 0;
+	FILE * fp;
+	int fd;
+	fpos_t pos;
 
 
 	do {
@@ -49,6 +54,7 @@ int main() {
 		do {
 			getcwd(workingdir, 1024);
 			printf("prompt1.0: %s> ",workingdir);
+			fflush(stdout);
 			getInput(input);
 		} while (input[0] == '\n');
 
@@ -90,12 +96,57 @@ int main() {
 				{
 					andmode = 4;
 				}
+				else if (isFunction(tab[j+1])==7) // >
+				{
+					andmode = 5;
+				}
+				else if (isFunction(tab[j+1])==8) // >>
+				{
+					andmode = 6;
+				}
+
 			}
 
 			if(isFunction(argv[0]) != 2 && isFunction(argv[0]) < 3 && skip == 0) {
 
+				if (andmode == 5)
+				{
+					//fp = fopen("file.txt", "w+");
+					fflush(stdout);
+					fgetpos(stdout, &pos);
+					fd = dup(fileno(stdout));
+    				freopen(&tab[j+2][1], "w+", stdout); // Petite hack comme on met des espaces à chaque fois entre les trucs, pour éviter que on enregistre dans [ file.txt] et direct dans [file.txt]
+    													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
+				}
+				else if (andmode == 6)
+				{
+					//fp = fopen("file.txt", "w+");
+					fflush(stdout);
+					fgetpos(stdout, &pos);
+					fd = dup(fileno(stdout));
+    				freopen(&tab[j+2][1], "a+", stdout); // Petite hack comme on met des espaces à chaque fois entre les trucs, pour éviter que on enregistre dans [ file.txt] et direct dans [file.txt]
+    													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
+				}
 				status = callFunction(argv, workingdirlib);
+			    if (andmode == 5)
+			    {
 
+			    	fflush(stdout);
+  					dup2(fd, fileno(stdout));
+			    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
+			    	clearerr(stdout);
+			    	fsetpos(stdout, &pos);
+
+				}
+				else if (andmode == 6)
+				{
+					fflush(stdout);
+  					dup2(fd, fileno(stdout));
+			    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
+			    	clearerr(stdout);
+			    	fsetpos(stdout, &pos);
+				}
+			    //fclose(fp);
 				//printf("Done with status %i\n", WEXITSTATUS(status));
 			} else {
 				
@@ -134,6 +185,22 @@ int main() {
 							skip = 3;
 							break;
 						default:
+							break;
+					}
+					andmode = 0;
+					break;
+				case 5: // >
+					switch(status) {
+						default:
+							skip = 3;
+							break;
+					}
+					andmode = 0;
+					break;
+				case 6: // >>
+					switch(status) {
+						default:
+							skip = 3;
 							break;
 					}
 					andmode = 0;
