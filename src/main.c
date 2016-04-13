@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <unistd.h>
+#include <time.h>
 #include <fcntl.h>
 
 #include <signal.h>
@@ -36,7 +37,6 @@ int main() {
 	if (workingdirlib == NULL)
 	{
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
-		//getcwd(workingdirlib, 1024);
 	}
 	//getcwd(workingdirlib, 1024);
 	chdir("bin");
@@ -58,8 +58,8 @@ int main() {
 			perror("Erreur dans \'ouverture du socket.");
 			exit(1);
 		}
-
-		port = 10002;
+		srand(time(NULL));
+		port = (rand()%10000)+10000;
 		server.sin_family = AF_INET;
 		server.sin_addr.s_addr = INADDR_ANY;
 		server.sin_port = htons(port);
