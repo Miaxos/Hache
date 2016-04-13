@@ -51,7 +51,7 @@ int callFunction(char **argv, char *workingdirlib) {
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "%s/commands/%s", workingdirlib, argv[0]);
+		sprintf(temp, "%s/%s", workingdirlib, argv[0]);
 		if (access(temp, F_OK ) != 0)
 		{
 			sprintf(temp, "/bin/%s", argv[0]);

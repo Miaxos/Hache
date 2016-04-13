@@ -32,8 +32,13 @@ int main() {
 	chdir("../");
 	printf("\033c");
 	char workingdir[1024];
-	char workingdirlib[1024];
-	getcwd(workingdirlib, 1024);
+	char *workingdirlib = getenv("PTERMINAL");
+	if (workingdirlib == NULL)
+	{
+		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
+		//getcwd(workingdirlib, 1024);
+	}
+	//getcwd(workingdirlib, 1024);
 	chdir("bin");
 	pid_t child = fork();
 	int my_socket, new_socket, clilen;
