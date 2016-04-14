@@ -104,7 +104,7 @@ int main() {
 		do {
 			i = 0;
 			while (i < 5){
-				printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
+				//printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
 				if (etatProc[i] != -2)
 				{
 					printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
