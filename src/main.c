@@ -10,7 +10,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <fcntl.h>
+
+#ifdef __linux__
 #include <stdio_ext.h>
+#endif
 
 #include <signal.h>
 
@@ -144,11 +147,7 @@ int main() {
 			listen(my_socket,5);
 			clearerr(stdout);
 			clearerr(stderr);
-			#ifdef __linux__
-			__fpurge(stdout);
-			#else
 			fpurge(stdout); // Petit Hack pour avoir un affichage correct.
-			#endif
 		}
 
 		for (i=0 ; i<TAILLE_MAX; i++) free(tab[i]);
