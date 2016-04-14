@@ -11,6 +11,8 @@
 #include <time.h>
 #include <fcntl.h>
 
+#include <pthread.h>
+
 #ifdef __linux__
 #include <stdio_ext.h>
 #endif
@@ -36,6 +38,8 @@ int main() {
 	chdir("../");
 	printf("\033c"); // Clear
 	char workingdir[1024];
+	int procBG = 0;
+	int etatProc[1000];
 
 	char *workingdirlib = getenv("PTERMINAL");
 	// Le répertoire des librairies est dans la variable d'env PTERMINAL.
@@ -84,6 +88,7 @@ int main() {
 		// On affiche le port du serveur à l'ouverture du terminal.
 
 	}
+	for (i=0 ; i<1000; i++) *etatProc[i]=-2;
 
 	do {
 		// Input du terminal
@@ -94,8 +99,20 @@ int main() {
 		tab = malloc(TAILLE_MAX*sizeof(char*));
 		for (i=0 ; i<TAILLE_MAX; i++) tab[i] = malloc(TAILLE_MAX*sizeof(char));
 		for (i=0 ; i<TAILLE_MAX; i++) memset(tab[i], '\0', TAILLE_MAX*sizeof(char));
+		
 
 		do {
+			i = 0;
+			while (i < 5){
+				printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
+				if (etatProc[i] != -2)
+				{
+					printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
+					etatProc[i] = -2;
+				}
+				i++;
+			}
+			i = 0;
 			getcwd(workingdir, 1024); // On récupère le répertoire de travail.
 			printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
 			fflush(stdout);
@@ -135,25 +152,27 @@ int main() {
 			background = inputTotab(input, tab);
 		}	
 		if (background != 0){
+			procBG++;
+			etatProc[procBG] = -2;
+
 			pid_t child2 = fork();
 			if (child2 == 0)
 			{
 				pid_t child3 = fork();
 				if (child3 == 0)
 				{
-					printf("[i] %d\n",getpid());
-					executerInput(tab, workingdirlib, child);
+
+					printf("[%d] %d\n",procBG, getpid());
+					etatProc[procBG] = executerInput(tab, workingdirlib, child);
 					//fflush(stdout);
 				}
 				else {
 					waitpid(child3, &statuschild, 0);
 					exit(statuschild);
 				}
+				exit(1);
 			}
-			else {
-				waitpid(child2, &statuschild, 0);
-				exit(statuschild);
-			}
+
 			background = 0;
 		}
 		else {
