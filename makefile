@@ -16,7 +16,7 @@ myls: myls.o
 mydu: mydu.o
 	gcc -o ./commands/mydu ./build/mydu.o
 
-test: main.o getInput.o functions.o socket.o
+test: main.o getInput.o functions.o socket.o com
 	gcc -o ./bin/test ./build/main.o ./build/getInput.o ./build/functions.o
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
@@ -51,6 +51,8 @@ myls2: myls2.o
 
 mydu.o: ./commands/mydu.c
 	gcc -c ./commands/mydu.c -o ./build/mydu.o -w
+
+
 
 clean:
 	rm -rf ./build/*.o

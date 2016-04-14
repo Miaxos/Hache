@@ -147,7 +147,7 @@ int main() {
 			listen(my_socket,5);
 			clearerr(stdout);
 			clearerr(stderr);
-			#ifdef __linux__
+			#ifdef linux
 			__fpurge(stdout);
 			#else
 			fpurge(stdout); // Petit Hack pour avoir un affichage correct.
