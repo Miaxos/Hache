@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <fcntl.h>
+#include <stdio_ext.h>
 
 #include <signal.h>
 
