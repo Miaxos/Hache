@@ -88,7 +88,7 @@ int main() {
 		// On affiche le port du serveur à l'ouverture du terminal.
 
 	}
-	for (i=0 ; i<1000; i++) *etatProc[i]=-2;
+	for (i=0 ; i<1000; i++) etatProc[i]=-2;
 
 	do {
 		// Input du terminal
@@ -104,7 +104,7 @@ int main() {
 		do {
 			i = 0;
 			while (i < 5){
-				//printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
+				// printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
 				if (etatProc[i] != -2)
 				{
 					printf("[%d] Effectué avec le code d'erreur: %d.\n", i, etatProc[i]);
