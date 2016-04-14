@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 echo "Usage: . ./define_variable.sh"
-export PTERMINAL=$(PWD)/commands
+export PTERMINAL=$(pwd)/commands
