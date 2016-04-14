@@ -26,20 +26,20 @@ int main() {
 	/*
 	Au démarrage on va lancer un processus serveur fils.
 	*/
-	// Code création du thread.
 
 	char *input, **tab;
 	int i = 0;
 	chdir("../");
 	printf("\033c"); // Clear
-	int executeOnServer = 0;
 	char workingdir[1024];
+
 	char *workingdirlib = getenv("PTERMINAL");
+	// Le répertoire des librairies est dans la variable d'env PTERMINAL.
+	// A ajouter dans le makefile.
 	if (workingdirlib == NULL)
 	{
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
 	}
-	//getcwd(workingdirlib, 1024);
 	chdir("bin");
 
 	// Variables socket SERVER
@@ -50,7 +50,7 @@ int main() {
 	struct sockaddr_in server, client;
 	int  n;
 
-	if (child == 0)
+	if (child == 0) // Si on est dans le fils.
 	{
 		// Creation du socket.
 		my_socket = socket(AF_INET, SOCK_STREAM, 0);
@@ -58,15 +58,15 @@ int main() {
 			perror("Erreur dans \'ouverture du socket.");
 			exit(1);
 		}
-		srand(time(NULL));
-		port = (rand()%10000)+10000;
+		srand(time(NULL)); // Seed pour le port pseudo-aléatoire.
+		port = (rand()%10000)+10000; // Entre 10000 - 20000
 		server.sin_family = AF_INET;
 		server.sin_addr.s_addr = INADDR_ANY;
 		server.sin_port = htons(port);
 
 		// Bind de l'adresse
 		if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
-			perror("Erreur: Bind failed.");
+			perror("Erreur echec du bind:");
 			exit(1);
 		}
 		
@@ -74,6 +74,7 @@ int main() {
 		listen(my_socket,5);
 		clilen = sizeof(struct sockaddr_in);
 		printf("Serveur lancé sur le port: %d.\n", port);
+		// On affiche le port du serveur à l'ouverture du terminal.
 
 	}
 
@@ -89,9 +90,10 @@ int main() {
 
 		do {
 			getcwd(workingdir, 1024); // On récupère le répertoire de travail.
-			printf("prompt1.0: %s> ", workingdir);
+			printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
 			fflush(stdout);
 			if(child == 0) {
+				// Si on est dans le fils, alors on va attendre que quelqu'un se connecte.
 				new_socket = accept(my_socket, (struct sockaddr *)&client, (socklen_t*)&clilen);
 				if (new_socket<0)
 				{
@@ -104,17 +106,21 @@ int main() {
 					perror("Erreur à la lecture depuis le socket: ");
 					exit(1);
 				}
+
+				// Redirection de stderr dans stdout, on ferme stdout et on la redirige dans le socket.
 				close(1);
 				dup2(1, 2);
 				dup(new_socket);
 				
 			}
 			else {
-			getInput(input);
+				// Si on est dans le père (terminal actif) on attend l'input de l'utilisateur.
+				getInput(input);
 			}
 		} while (input[0] == '\n');
 
 		if (child==0)
+			// On convertit l'input du socket / du temrinal en tableau de commande.
 		{
 			inputTotab(buffer, tab);
 		}
@@ -122,23 +128,26 @@ int main() {
 			inputTotab(input, tab);
 		}		
 
-		// executerInput
-		if (executeOnServer == 1) {
-			// On balance au serveur la requête et on attend le retour.
-		}
-		else {
-			executerInput(tab, workingdirlib, child);
-		}
-		fflush(stdout);
+		executerInput(tab, workingdirlib, child);
+		fflush(stdout); // Pour le bon affichage de la sortie.
 
 		if(child == 0)
 		{
+			// Si on est dans le fils, on ferme le socket, on flush les sorties, et on se remet en écoute.
+			// Cela permet avec le système de connection de gérer plusieurs utilisateurs en même temps sur le terminal.
+			// Cependant ils auront tous le même environnement de travail.
+			// Si un change de dossier avec un cd, cela affectera l'ensemble des utilisateurs connectés à distance.
+
 			shutdown(new_socket, 0);
 			fflush(stdout);
 			listen(my_socket,5);
 			clearerr(stdout);
 			clearerr(stderr);
-			fpurge(stdout);
+			#ifdef __linux__
+			__fpurge(stdout);
+			#else
+			fpurge(stdout); // Petit Hack pour avoir un affichage correct.
+			#endif
 		}
 
 		for (i=0 ; i<TAILLE_MAX; i++) free(tab[i]);
@@ -151,7 +160,7 @@ int main() {
 }
 
 int executerInput(char **tab, char *workingdirlib, pid_t child) {
-	// Variables à add dans executerinput: buffer, sockfd, executeOnServer
+
 	int i = 0;
 	int forceEnd = 0;
 	char **argv, **argv2;
@@ -161,18 +170,17 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 	int status = 0;
 	// FILE * fp;
 	int fd;
-	fpos_t pos;
+	fpos_t pos; // Petite manipulation pour la gestion des stdout stderr;
 
 	// Variables socket CLIENT
 	int sockfd, port_client, n;
    	struct sockaddr_in serv_addr;
    	struct hostent *server;
-  	char server_reply[6000];
+  	char server_reply[6000]; // Réponse du serveur
   	char buffer[256];
 
 	while((tab[j][0] != '\n') && !forceEnd && (tab[j][0] != 0)) {		
-		//printf("tab %d (%d)\n",j, tab[j][0]);
-		//argv
+		// Allocations mémoires
 		argv = malloc(TAILLE_MAX*sizeof(char*));
 		for (i=0 ; i<TAILLE_MAX; i++) argv[i] = malloc(TAILLE_MAX*sizeof(char));
 		for (i=0 ; i<TAILLE_MAX; i++) memset(argv[i], '\0', TAILLE_MAX*sizeof(char));
@@ -182,7 +190,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 		for (i=0 ; i<TAILLE_MAX; i++) memset(argv2[i], '\0', TAILLE_MAX*sizeof(char));
 
 
-		parseCommande(tab[j], argv);
+		parseCommande(tab[j], argv); // On parse le tableau suivant pour gérer les redirections et les opérateurs.
 		if (tab[j+1][0] != '\n' && tab[j+1][0]!=0 )
 		{
 			parseCommande(tab[j+1], argv2);
@@ -221,7 +229,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 
 			if (andmode == 5)
 			{
-				//fp = fopen("file.txt", "w+");
+				// Dans le cas d'une redirection >
 				fflush(stdout);
 				fgetpos(stdout, &pos);
 				fd = dup(fileno(stdout));
@@ -230,33 +238,32 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 			}
 			else if (andmode == 6)
 			{
-				//fp = fopen("file.txt", "w+");
+				// Dans le cas d'une redirection >>
 				fflush(stdout);
 				fgetpos(stdout, &pos);
 				fd = dup(fileno(stdout));
 				freopen(&tab[j+2][1], "a+", stdout); // Petite hack comme on met des espaces à chaque fois entre les trucs, pour éviter que on enregistre dans [ file.txt] et direct dans [file.txt]
 													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
 			}
+
 			status = callFunction(argv, workingdirlib);
+
 		    if (andmode == 5)
 		    {
-
 		    	fflush(stdout);
 				dup2(fd, fileno(stdout));
-		    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
+		    	close(fd);
 		    	clearerr(stdout);
 		    	fsetpos(stdout, &pos);
-
 			}
 			else if (andmode == 6)
 			{
 				fflush(stdout);
 				dup2(fd, fileno(stdout));
-		    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
+		    	close(fd);
 		    	clearerr(stdout);
 		    	fsetpos(stdout, &pos);
 			}
-		    //fclose(fp);
 			//printf("Done with status %i\n", WEXITSTATUS(status));
 		} else {
 			if (skip == 0)
@@ -267,6 +274,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 
 				if (!strcmp(tab[j],"exit")) {
 					kill(child, 9);
+					// On tue le process fils avant d'exit l'application
 					exit(1);
 				}
 
@@ -281,7 +289,6 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 						int connectLoop = 0;
 						while (connectLoop == 0)
 						{
-							connectLoop = 1;
 							port_client = atoi(argv[2]);
 							// On cree le socket.
 							sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -294,28 +301,33 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 							    fprintf(stderr,"Erreur: l'hôte est incorrect.\n");
 							  	break;
 							}
+
 							bzero((char *) &serv_addr, sizeof(serv_addr));
 							serv_addr.sin_family = AF_INET;
 							bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
 							serv_addr.sin_port = htons(port_client);
+
+							printf("prompt-dp$>");
+							bzero(buffer,256); // Reset du buffer.
+							fgets(buffer,255,stdin);
+
 							if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
 								perror("Erreur à la connection:");
 								break;
 							}
-							printf("prompt-dp$>");
-							bzero(buffer,256);
-							fgets(buffer,255,stdin);
 
-							if(!strcmp(buffer, "exit\n"))
+							if(!strcmp(buffer, "exit\n")) // Petit hack avec le \n, fgets balance un truc genre exit\n\0, il fautdrait arranger ça d'une façon plus jolie.
 							{
 								n = write(sockfd, "clear\n", strlen("clear\n"));
+								// On clear histoire que ce soit beau.
 								memset(server_reply, 0, sizeof server_reply);
+								// Pour éviter d'avoir des merdes dans l'affichages, on oublie pas de reset le serveur_reply
 								if( recv(sockfd, server_reply , 6000 , 0) < 0)
 								{
 									printf("Erreur dans la reception des données:\n");
 									break;
 								}
-								shutdown(sockfd,0);
+								shutdown(sockfd,0); // ~= close(sockfd)
 								break;
 							}
 							n = write(sockfd, buffer, strlen(buffer));
@@ -324,6 +336,8 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 								break;
 							}
 							memset(server_reply, 0, sizeof server_reply);
+							// Pour éviter d'avoir des merdes dans l'affichages, on oublie pas de reset le serveur_reply
+
 							if( recv(sockfd, server_reply , 6000 , 0) < 0)
 							{
 								printf("Erreur dans la reception des données:\n");
@@ -331,7 +345,6 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 							}
 							puts(server_reply);
 							shutdown(sockfd, 0);
-							connectLoop = 0;
 						}
 					}
 				}
@@ -352,6 +365,8 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 			}
 		}
 		switch(andmode) {
+			// Sans les priorités, on utilise ce système, si on ajoute les priorités, 
+			// il faudra penser le truc un peu differement, et on sera plus obliger d'utiliser ça.
 			case 1: // &&
 				switch(status) {
 					case 0:
@@ -401,80 +416,6 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 		j++;
 	}
 	return status;
-
-}
-
-
-int creationSocket() {
-	
-	// Fonction de création de socket
-	// Création d'un socket d'écoute qui va ensuite traiter les infos
-	int my_socket, new_socket, clilen;
-	int port;
-	char buffer[256];
-	struct sockaddr_in server, client;
-	int  n;
-	
-	// Creation du socket
-	my_socket = socket(AF_INET, SOCK_STREAM, 0);
-
-	// En cas d'erreur
-	if (my_socket < 0) {
-		perror("Erreur dans \'ouverture du socket.");
-		exit(1);
-	}
-	
-	// Structure du socket	
-	port = 10002;
-	server.sin_family = AF_INET;
-	server.sin_addr.s_addr = INADDR_ANY;
-	server.sin_port = htons(port);
-	
-	// Bind de l'adresse
-	if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
-		perror("Erreur: Bind failed.");
-		exit(1);
-	}
-		
-	// Mode écoute (second argument: la queue).
-	listen(my_socket,5);
-		
-	//On accepte les connections
-	puts("Waiting for incoming connections...");
-	clilen = sizeof(struct sockaddr_in);
-	while(1)
-	{
-		new_socket = accept(my_socket, (struct sockaddr *)&client, (socklen_t*)&clilen);
-		if (new_socket<0)
-		{
-			perror("Erreur: Accept failed.");
-			exit(1);
-		}
-
-		/* If connection is established then start communicating */
-		bzero(buffer,256);
-		n = read( new_socket,buffer,255 );
-		
-		if (n < 0) {
-			perror("Erreur: lecture depuis le socket");
-			exit(1);
-		}
-		
-		// On récupère le message
-		// On redirige la sortie standard dup2()
-		// On le traite
-		// On balance
-		printf("Message: %s\n",buffer);
-		
-		/* Write a response to the client */
-		n = write(new_socket,"I got your message",18);
-		
-		if (n < 0) {
-			perror("ERROR writing to socket");
-			exit(1);
-		}
-	}   
-	return 0;
 
 }
 
