@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
    struct sockaddr_in serv_addr;
    struct hostent *server;
    char server_reply[6000];
+   int firstCo = 0;
    
    char buffer[256];
    
@@ -51,8 +52,13 @@ int main(int argc, char *argv[]) {
    /* Now ask for a message from the user, this message
       * will be read by server
    */
-	
+	  if (firstCo == 0) {
       printf("Please enter the message: ");
+     }
+     else {
+      printf("prompt-dp$>");
+     }
+     firstCo = 1;
       bzero(buffer,256);
       fgets(buffer,255,stdin);
       
@@ -63,7 +69,7 @@ int main(int argc, char *argv[]) {
          perror("ERROR writing to socket");
          exit(1);
       }
-      
+      memset(server_reply, 0, sizeof server_reply);
       /* Now read server response */
       if( recv(sockfd, server_reply , 6000 , 0) < 0)
          {
@@ -71,7 +77,7 @@ int main(int argc, char *argv[]) {
          }
          puts(server_reply);
    	close(sockfd);
-      printf("%s\n",buffer);
+      // printf("%s\n",buffer);
    }
    return 0;
 }

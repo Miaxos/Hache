@@ -31,7 +31,8 @@ int main() {
 	char *input, **tab;
 	int i = 0;
 	chdir("../");
-	printf("\033c");
+	printf("\033c"); // Clear
+	int executeOnServer = 0;
 	char workingdir[1024];
 	char *workingdirlib = getenv("PTERMINAL");
 	if (workingdirlib == NULL)
@@ -40,15 +41,14 @@ int main() {
 	}
 	//getcwd(workingdirlib, 1024);
 	chdir("bin");
+
+	// Variables socket SERVER
 	pid_t child = fork();
 	int my_socket, new_socket, clilen;
 	int port;
 	char buffer[256];
 	struct sockaddr_in server, client;
 	int  n;
-	//int skip = 0;
-	//int andmode = 0;
-	//int redirectionmode = 0;
 
 	if (child == 0)
 	{
@@ -95,16 +95,17 @@ int main() {
 				new_socket = accept(my_socket, (struct sockaddr *)&client, (socklen_t*)&clilen);
 				if (new_socket<0)
 				{
-					perror("Erreur: Accept failed.");
+					perror("Erreur à l'acceptation: ");
 					exit(1);
 				}
 				bzero(buffer,256);
 				n = read( new_socket,buffer,255 );
 				if (n < 0) {
-					perror("ERROR reading from socket");
+					perror("Erreur à la lecture depuis le socket: ");
 					exit(1);
 				}
 				close(1);
+				dup2(1, 2);
 				dup(new_socket);
 				
 			}
@@ -122,18 +123,22 @@ int main() {
 		}		
 
 		// executerInput
-		executerInput(tab, workingdirlib, child);
+		if (executeOnServer == 1) {
+			// On balance au serveur la requête et on attend le retour.
+		}
+		else {
+			executerInput(tab, workingdirlib, child);
+		}
 		fflush(stdout);
 
 		if(child == 0)
 		{
-			//send(new_socket, 'E', 1, 0);  
-			// n = write(new_socket,"I got your message",18);
-			// if (n < 0) {
-			// 	perror("ERROR writing to socket");
-			// 	exit(1);
-			// }
 			shutdown(new_socket, 0);
+			fflush(stdout);
+			listen(my_socket,5);
+			clearerr(stdout);
+			clearerr(stderr);
+			fpurge(stdout);
 		}
 
 		for (i=0 ; i<TAILLE_MAX; i++) free(tab[i]);
@@ -146,7 +151,7 @@ int main() {
 }
 
 int executerInput(char **tab, char *workingdirlib, pid_t child) {
-
+	// Variables à add dans executerinput: buffer, sockfd, executeOnServer
 	int i = 0;
 	int forceEnd = 0;
 	char **argv, **argv2;
@@ -157,6 +162,14 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 	// FILE * fp;
 	int fd;
 	fpos_t pos;
+
+	// Variables socket CLIENT
+	int sockfd, port_client, n;
+   	struct sockaddr_in serv_addr;
+   	struct hostent *server;
+  	char server_reply[6000];
+  	char buffer[256];
+
 	while((tab[j][0] != '\n') && !forceEnd && (tab[j][0] != 0)) {		
 		//printf("tab %d (%d)\n",j, tab[j][0]);
 		//argv
@@ -229,7 +242,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 		    {
 
 		    	fflush(stdout);
-					dup2(fd, fileno(stdout));
+				dup2(fd, fileno(stdout));
 		    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
 		    	clearerr(stdout);
 		    	fsetpos(stdout, &pos);
@@ -238,7 +251,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 			else if (andmode == 6)
 			{
 				fflush(stdout);
-					dup2(fd, fileno(stdout));
+				dup2(fd, fileno(stdout));
 		    	close(fd);     // fd no longer needed - the dup'ed handles are sufficient
 		    	clearerr(stdout);
 		    	fsetpos(stdout, &pos);
@@ -257,12 +270,81 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 					exit(1);
 				}
 
+				if (!strcmp(argv[0],"connect")) {
+					if (argv[2] == NULL || argv[1] == NULL)
+					{
+						fprintf(stderr, "Utilisation: connect host port.\n");
+					}
+					else
+					{
+						printf("Blbl\n");
+						int connectLoop = 0;
+						while (connectLoop == 0)
+						{
+							connectLoop = 1;
+							port_client = atoi(argv[2]);
+							// On cree le socket.
+							sockfd = socket(AF_INET, SOCK_STREAM, 0);
+							if (sockfd < 0) {
+								perror("Erreur à l'ouverture du socket:");
+								break;
+							}
+							server = gethostbyname(argv[1]);
+							if (server == NULL) {
+							    fprintf(stderr,"Erreur: l'hôte est incorrect.\n");
+							  	break;
+							}
+							bzero((char *) &serv_addr, sizeof(serv_addr));
+							serv_addr.sin_family = AF_INET;
+							bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+							serv_addr.sin_port = htons(port_client);
+							if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
+								perror("Erreur à la connection:");
+								break;
+							}
+							printf("prompt-dp$>");
+							bzero(buffer,256);
+							fgets(buffer,255,stdin);
+
+							if(!strcmp(buffer, "exit\n"))
+							{
+								n = write(sockfd, "clear\n", strlen("clear\n"));
+								memset(server_reply, 0, sizeof server_reply);
+								if( recv(sockfd, server_reply , 6000 , 0) < 0)
+								{
+									printf("Erreur dans la reception des données:\n");
+									break;
+								}
+								shutdown(sockfd,0);
+								break;
+							}
+							n = write(sockfd, buffer, strlen(buffer));
+							if (n < 0) {
+								perror("Erreur dans l'écriture du socket:");
+								break;
+							}
+							memset(server_reply, 0, sizeof server_reply);
+							if( recv(sockfd, server_reply , 6000 , 0) < 0)
+							{
+								printf("Erreur dans la reception des données:\n");
+								break;
+							}
+							puts(server_reply);
+							shutdown(sockfd, 0);
+							connectLoop = 0;
+						}
+					}
+				}
+
 				if (!strcmp(argv[0],"cd")){
 					if(argv[1] != NULL)
 					{
 						status = chdir(argv[1]);
 						if(status!=0){
 				          perror("Erreur:");
+				        }
+				        else {
+				        	printf(" ");
 				        }
 				        //printf("STATUS: %d\n", status);
 				    }

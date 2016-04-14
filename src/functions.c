@@ -82,7 +82,7 @@ int callFunction(char **argv, char *workingdirlib) {
 	} else {
 		wait(&status);
 	}
-	//printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
+	// printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
 	// WEXITSTATUS: 0 : OK 1: ERROR
 	return WEXITSTATUS(status);
 }
