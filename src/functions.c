@@ -113,13 +113,15 @@ int isDelimiter(char c) {
 
 			maintenant resultat est : [[commande1][&&][commande2][|][commande4][&][\n][]...[]]
 */
-void inputTotab(const char *input, char **inputTab) {
+int inputTotab(const char *input, char **inputTab) {
 	enum Etats { Etat1,Etat2,Etat3,Etat4,Etat5,Etat6,Etat7,Etat8,Etat9,EtatF };
 
 	int i = 0, compteur = 0, compteur2 = 0;
 	char c;
 	enum Etats curEtat = Etat1;
 	int fini = 0;
+
+	int background = 0;
 
 	while (!fini) {
 		switch (curEtat) {
@@ -226,11 +228,11 @@ void inputTotab(const char *input, char **inputTab) {
 				inputTab[compteur][compteur2++] = c;
 				curEtat = Etat7;
 			} else if (c=='\n') {
-				// printf("BLBL\n");
 				compteur++;
 				inputTab[compteur][compteur2++] = c;
 				inputTab[compteur][compteur2++] = '\0';
 				curEtat = EtatF;
+				background = 1;
 			}
 			break;
 		case Etat9 :
@@ -250,6 +252,7 @@ void inputTotab(const char *input, char **inputTab) {
 			break;
 		}
 	}
+	return background;
 
 }
 

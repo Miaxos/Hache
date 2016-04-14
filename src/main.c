@@ -54,6 +54,9 @@ int main() {
 	struct sockaddr_in server, client;
 	int  n;
 
+	int background = 0;
+	int statuschild = 0;
+
 	if (child == 0) // Si on est dans le fils.
 	{
 		// Creation du socket.
@@ -126,14 +129,37 @@ int main() {
 		if (child==0)
 			// On convertit l'input du socket / du temrinal en tableau de commande.
 		{
-			inputTotab(buffer, tab);
+			background = inputTotab(buffer, tab);
 		}
 		else {
-			inputTotab(input, tab);
-		}		
-
-		executerInput(tab, workingdirlib, child);
-		fflush(stdout); // Pour le bon affichage de la sortie.
+			background = inputTotab(input, tab);
+		}	
+		if (background != 0){
+			pid_t child2 = fork();
+			if (child2 == 0)
+			{
+				pid_t child3 = fork();
+				if (child3 == 0)
+				{
+					printf("[i] %d\n",getpid());
+					executerInput(tab, workingdirlib, child);
+					//fflush(stdout);
+				}
+				else {
+					waitpid(child3, &statuschild, 0);
+					exit(statuschild);
+				}
+			}
+			else {
+				waitpid(child2, &statuschild, 0);
+				exit(statuschild);
+			}
+			background = 0;
+		}
+		else {
+			executerInput(tab, workingdirlib, child);
+			fflush(stdout); // Pour le bon affichage de la sortie.
+		}
 
 		if(child == 0)
 		{
