@@ -271,6 +271,11 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 			{
 				andmode = 6;
 			}
+			else if (isFunction(tab[j+1])==9) // <
+				// En cours
+			{
+				andmode = 7;
+			}
 
 		}
 
@@ -294,6 +299,15 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 				freopen(&tab[j+2][1], "a+", stdout); // Petite hack comme on met des espaces à chaque fois entre les trucs, pour éviter que on enregistre dans [ file.txt] et direct dans [file.txt]
 													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
 			}
+			else if (andmode == 7)
+			{
+				// Dans le cas d'une redirection >>
+				fflush(stdout);
+				fgetpos(stdout, &pos);
+				fd = dup(fileno(stdin));
+				freopen(&tab[j+2][1], "r", stdin); // Petite hack comme on met des espaces à chaque fois entre les trucs, pour éviter que on enregistre dans [ file.txt] et direct dans [file.txt]
+													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
+			}
 
 			status = callFunction(argv, workingdirlib);
 
@@ -312,6 +326,14 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 		    	close(fd);
 		    	clearerr(stdout);
 		    	fsetpos(stdout, &pos);
+			}
+			else if (andmode == 7)
+			{
+				fflush(stdin);
+				dup2(fd, fileno(stdin));
+		    	close(fd);
+		    	clearerr(stdin);
+		    	fsetpos(stdin, &pos);
 			}
 			//printf("Done with status %i\n", WEXITSTATUS(status));
 		} else {
@@ -445,6 +467,14 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 				andmode = 0;
 				break;
 			case 6: // >>
+				switch(status) {
+					default:
+						skip = 3;
+						break;
+				}
+				andmode = 0;
+				break;
+			case 7: // >>
 				switch(status) {
 					default:
 						skip = 3;
