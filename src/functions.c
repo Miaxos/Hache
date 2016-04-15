@@ -18,9 +18,9 @@ int isFunction(const char *function) {
 	if (!strcmp(function,"clear")) return 2; // Done
 	if (!strcmp(function,"cd")) return 2; // Done mais erreurs à gérer
 	if (!strcmp(function,"exit")) return 2; // Done
-	// Connect (AG: je m'en occupe)
+	if (!strcmp(function, "connect")) return 2;
 
-	if (!strcmp(function, "<<")) return 10; // A faire
+	if (!strcmp(function, "<<")) return 10; // A faire ça existe ? 
 	if (!strcmp(function, "<")) return 9; // A faire
 
 	if (!strcmp(function, ">>")) return 8; // Done mais deg'
@@ -51,7 +51,7 @@ int callFunction(char **argv, char *workingdirlib) {
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "%s/commands/%s", workingdirlib, argv[0]);
+		sprintf(temp, "%s/%s", workingdirlib, argv[0]);
 		if (access(temp, F_OK ) != 0)
 		{
 			sprintf(temp, "/bin/%s", argv[0]);
@@ -82,7 +82,7 @@ int callFunction(char **argv, char *workingdirlib) {
 	} else {
 		wait(&status);
 	}
-	printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
+	// printf("EXITSTATUS: %d\n", WEXITSTATUS(status));
 	// WEXITSTATUS: 0 : OK 1: ERROR
 	return WEXITSTATUS(status);
 }
@@ -113,13 +113,15 @@ int isDelimiter(char c) {
 
 			maintenant resultat est : [[commande1][&&][commande2][|][commande4][&][\n][]...[]]
 */
-void inputTotab(const char *input, char **inputTab) {
+int inputTotab(const char *input, char **inputTab) {
 	enum Etats { Etat1,Etat2,Etat3,Etat4,Etat5,Etat6,Etat7,Etat8,Etat9,EtatF };
 
 	int i = 0, compteur = 0, compteur2 = 0;
 	char c;
 	enum Etats curEtat = Etat1;
 	int fini = 0;
+
+	int background = 0;
 
 	while (!fini) {
 		switch (curEtat) {
@@ -226,11 +228,11 @@ void inputTotab(const char *input, char **inputTab) {
 				inputTab[compteur][compteur2++] = c;
 				curEtat = Etat7;
 			} else if (c=='\n') {
-				// printf("BLBL\n");
 				compteur++;
 				inputTab[compteur][compteur2++] = c;
 				inputTab[compteur][compteur2++] = '\0';
 				curEtat = EtatF;
+				background = 1;
 			}
 			break;
 		case Etat9 :
@@ -250,6 +252,7 @@ void inputTotab(const char *input, char **inputTab) {
 			break;
 		}
 	}
+	return background;
 
 }
 

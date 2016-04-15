@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
    int sockfd, portno, n;
    struct sockaddr_in serv_addr;
    struct hostent *server;
+   char server_reply[6000];
+   int firstCo = 0;
    
    char buffer[256];
    
@@ -21,6 +23,7 @@ int main(int argc, char *argv[]) {
 	
    portno = atoi(argv[2]);
    
+   while(1) {
    /* Create a socket point */
    sockfd = socket(AF_INET, SOCK_STREAM, 0);
    
@@ -40,7 +43,6 @@ int main(int argc, char *argv[]) {
    serv_addr.sin_family = AF_INET;
    bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
    serv_addr.sin_port = htons(portno);
-   
    /* Now connect to the server */
    if (connect(sockfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr)) < 0) {
       perror("ERROR connecting");
@@ -50,28 +52,32 @@ int main(int argc, char *argv[]) {
    /* Now ask for a message from the user, this message
       * will be read by server
    */
-	
-   printf("Please enter the message: ");
-   bzero(buffer,256);
-   fgets(buffer,255,stdin);
-   
-   /* Send message to the server */
-   n = write(sockfd, buffer, strlen(buffer));
-   
-   if (n < 0) {
-      perror("ERROR writing to socket");
-      exit(1);
+	  if (firstCo == 0) {
+      printf("Please enter the message: ");
+     }
+     else {
+      printf("prompt-dp$>");
+     }
+     firstCo = 1;
+      bzero(buffer,256);
+      fgets(buffer,255,stdin);
+      
+      /* Send message to the server */
+      n = write(sockfd, buffer, strlen(buffer));
+      
+      if (n < 0) {
+         perror("ERROR writing to socket");
+         exit(1);
+      }
+      memset(server_reply, 0, sizeof server_reply);
+      /* Now read server response */
+      if( recv(sockfd, server_reply , 6000 , 0) < 0)
+         {
+           puts("recv failed");
+         }
+         puts(server_reply);
+   	close(sockfd);
+      // printf("%s\n",buffer);
    }
-   
-   /* Now read server response */
-   bzero(buffer,256);
-   n = read(sockfd, buffer, 255);
-   
-   if (n < 0) {
-      perror("ERROR reading from socket");
-      exit(1);
-   }
-	
-   printf("%s\n",buffer);
    return 0;
 }
