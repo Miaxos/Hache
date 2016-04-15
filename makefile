@@ -22,7 +22,7 @@ test: main.o getInput.o functions.o socket.o
 	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
 
 main.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
-	@mkdir build	
+	@mkdir -p build	
 	gcc -Wall -c ./src/main.c -o ./build/main.o
 	@echo "\033[33;32m\t✓ Build: main done."
 	@echo "\033[33;00m"
