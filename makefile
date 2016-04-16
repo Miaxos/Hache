@@ -8,7 +8,10 @@ ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 
 
-all: test myls mydu
+all: test myls mydu mypwd
+
+mypwd: mypwd.o
+	gcc -o ./commands/mypwd ./build/mypwd.o
 
 myls: myls.o
 	gcc -o ./commands/myls ./build/myls.o
@@ -46,6 +49,9 @@ myls.o: ./commands/myls.c
 
 myls2.o: ./commands/myls2.c
 	gcc -c ./commands/myls2.c -o ./build/myls2.o -w
+
+mypwd.o: ./commands/mypwd.c
+	gcc -c ./commands/mypwd.c -o ./build/mypwd.o -w
 
 myls2: myls2.o
 	gcc -o ./commands/myls2 ./build/myls2.o

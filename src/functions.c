@@ -14,6 +14,7 @@
 int isFunction(const char *function) {
 	if (!strcmp(function,"myls")) return 0;
 	if (!strcmp(function,"mydu")) return 0;
+	if (!strcmp(function,"mypwd")) return 0;
 
 	if (!strcmp(function,"clear")) return 2; // Done
 	if (!strcmp(function,"cd")) return 2; // Done mais erreurs à gérer
