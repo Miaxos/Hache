@@ -11,7 +11,9 @@
 #include <time.h>
 #include <limits.h>
 
-int main(int argc,char *argv[])
+#include "myls.h"
+
+int executels(int argc, char *argv[])
 {
 	DIR *dirp;
 	struct dirent *dptr;
@@ -37,7 +39,7 @@ int main(int argc,char *argv[])
 	}
 	if (!S_ISDIR(st.st_mode))
 	{
-		printf("%s doit être un répertoire\n",dir);
+		printf("%s doit Ãªtre un rÃ©pertoire\n",dir);
 		return(-1);
 	}
 
@@ -47,7 +49,7 @@ int main(int argc,char *argv[])
 		return(-1);
 	}
 
-	while (dptr=readdir(dirp))
+	while ((dptr=readdir(dirp)))
 	{
 		if (dir[strlen(dir)-1]=='/') sprintf(path,"%s%s",dir,dptr->d_name);
 		else sprintf(path,"%s/%s",dir,dptr->d_name);
@@ -94,3 +96,10 @@ int main(int argc,char *argv[])
 
 	return(0);
 }
+
+#ifdef EXEC
+int main(int argc,char *argv[])
+{
+	return executels(argc, argv);
+}
+#endif

@@ -49,6 +49,8 @@ char* getFunctionName(const char *function, char *function2) {
 
 int callFunction(int argc, char **argv, char *workingdirlib, SCmd* tabcommandes[]) {
 	char temp[TAILLE_MAX];
+	char workingdir[1024];
+	getcwd(workingdir, 1024);
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
@@ -65,19 +67,24 @@ int callFunction(int argc, char **argv, char *workingdirlib, SCmd* tabcommandes[
 			i++;
 		}
 		#endif
-		sprintf(temp, "%s/%s", workingdirlib, argv[0]);
-		if (access(temp, F_OK ) != 0)
+
+		sprintf(temp, "%s/%s", workingdir, argv[0]);
+		if (access(temp, F_OK) != 0) 
 		{
-			sprintf(temp, "/bin/%s", argv[0]);
+			sprintf(temp, "%s/%s", workingdirlib, argv[0]);
 			if (access(temp, F_OK ) != 0)
 			{
-				sprintf(temp, "/usr/local/bin/%s", argv[0]);
+				sprintf(temp, "/bin/%s", argv[0]);
 				if (access(temp, F_OK ) != 0)
 				{
-					sprintf(temp, "/usr/bin/%s", argv[0]);
+					sprintf(temp, "/usr/local/bin/%s", argv[0]);
 					if (access(temp, F_OK ) != 0)
 					{
-						sprintf(temp, "/sbin/%s", argv[0]);
+						sprintf(temp, "/usr/bin/%s", argv[0]);
+						if (access(temp, F_OK ) != 0)
+						{
+							sprintf(temp, "/sbin/%s", argv[0]);
+						}
 					}
 				}
 			}

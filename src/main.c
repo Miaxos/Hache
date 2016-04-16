@@ -28,6 +28,7 @@
 
 #else
 int executepwd(int argc, char *argv[]);
+int executels(int argc, char *argv[]);
 #endif
 
 
@@ -104,7 +105,7 @@ int main() {
 
 #else
 	listeFonctions[0] = ModCmd(listeFonctions[0], "mypwd", &executepwd);
-	listeFonctions[1] = ModCmd(listeFonctions[1], "mypwdde", &executepwd);
+	listeFonctions[1] = ModCmd(listeFonctions[1], "myls", &executels);
 #endif
 	//listeFonctions[1] = AddCmd("myls", &executels);
 	//listeFonctions[2] = AddCmd("mymkdir", &executemkdir);

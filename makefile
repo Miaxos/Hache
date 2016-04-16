@@ -10,9 +10,13 @@ WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 CFLAGS=-DEXEC
 
 
-all: clean proper myls mydu mypwd test
+all: clean proper init myls mydu mypwd test
 
-all-lib: clean proper myls mydu mypwd-lib-stat test-lib
+all-lib: clean proper init myls-lib-stat mydu mypwd-lib-stat test-lib
+
+init:
+	@mkdir -p build	
+	@mkdir -p lib
 
 mypwd-lib-stat:
 	gcc -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
@@ -24,18 +28,21 @@ mypwd:
 	gcc $(CFLAGS) -o ./commands/mypwd ./build/mypwd.o
 	@echo "\033[33;32m\t✓ Mypwd: done."
 
-myls: myls.o
+myls:
+	gcc $(CFLAGS) -Wall -c ./commands/myls.c -o ./build/myls.o -w
 	gcc $(CFLAGS) -o ./commands/myls ./build/myls.o
-
-myls-lib-stat: myls.o
-	gcc -Wall -o ./commands/myls ./build/myls.o
 	@echo "\033[33;32m\t✓ myls: done."
+
+myls-lib-stat:
+	gcc -Wall -c -o ./build/myls.o ./commands/myls.c
+	@echo "\033[33;32m\t✓ myls-lib-stat: done."
+	@ar crv ./lib/libmyls.a build/myls.o
 
 mydu: mydu.o
 	gcc $(CFLAGS) -o ./commands/mydu ./build/mydu.o
 
 test-lib: main-lib.o getInput-lib.o functions-lib.o socket-lib.o
-	gcc -o ./bin/test ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd
+	gcc -o ./bin/test ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
 
@@ -45,14 +52,12 @@ test: main.o getInput.o functions.o socket.o
 	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
 
 main.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
-	@mkdir -p build	
 	gcc $(CFLAGS) -Wall -c ./src/main.c -o ./build/main.o
 	#gcc -Wall -o ./build/main.o ./src/main.c -L. -lmypwd
 	@echo "\033[33;32m\t✓ Build: main done."
 	@echo "\033[33;00m"
 
 main-lib.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
-	@mkdir -p build	
 	gcc -Wall -c ./src/main.c -o ./build/main.o
 	#gcc -Wall -o ./build/main.o ./src/main.c -L. -lmypwd
 	@echo "\033[33;32m\t✓ Build: main done."
