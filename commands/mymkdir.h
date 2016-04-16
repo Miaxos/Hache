@@ -1,3 +1,2 @@
-int executepwd(int argc, char *argv[]);
-int pwd();
+int executemkdir(int argc, char *argv[]);
 

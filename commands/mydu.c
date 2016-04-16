@@ -7,9 +7,18 @@
 #include <string.h>
 #include <limits.h>
 
+#include "mydu.h"
+
 unsigned int RepSize(char *file);
 
+#ifdef EXEC
 int main(int argc,char *argv[])
+{
+	return executedu(argc, argv);
+}
+#endif
+
+int executedu(int argc, char *argv[])
 {
 	unsigned int size;
 	int i;

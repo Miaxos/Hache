@@ -1,3 +1,4 @@
-int executepwd(int argc, char *argv[]);
-int pwd();
+int executedu(int argc, char *argv[]);
+unsigned int RepSize(char *file);
+
 

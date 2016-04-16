@@ -7,12 +7,15 @@ OK_STRING=$(OK_COLOR)[OK]$(NO_COLOR)
 ERROR_STRING=$(ERROR_COLOR)[ERRORS]$(NO_COLOR)
 WARN_STRING=$(WARN_COLOR)[WARNINGS]$(NO_COLOR)
 
+EXEC=Hache
 CFLAGS=-DEXEC
 
+hello: 
+	@echo "\033[31;01m\t✕ make <all | all-lib | all-lib-dyn>"
 
-all: clean proper init myls mydu mypwd test
+all: clean proper init myls mydu mypwd mymkdir test
 
-all-lib: clean proper init myls-lib-stat mydu mypwd-lib-stat test-lib
+all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat test-lib
 
 init:
 	@mkdir -p build	
@@ -21,45 +24,71 @@ init:
 mypwd-lib-stat:
 	gcc -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
 	@echo "\033[33;32m\t✓ Mypwd-lib-stat: done."
+	@echo "\033[33;00m"
 	@ar crv ./lib/libmypwd.a build/mypwd.o
 
 mypwd:
 	gcc $(CFLAGS) -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
 	gcc $(CFLAGS) -o ./commands/mypwd ./build/mypwd.o
 	@echo "\033[33;32m\t✓ Mypwd: done."
+	@echo "\033[33;00m"
 
 myls:
 	gcc $(CFLAGS) -Wall -c ./commands/myls.c -o ./build/myls.o -w
 	gcc $(CFLAGS) -o ./commands/myls ./build/myls.o
 	@echo "\033[33;32m\t✓ myls: done."
+	@echo "\033[33;00m"
 
 myls-lib-stat:
 	gcc -Wall -c -o ./build/myls.o ./commands/myls.c
 	@echo "\033[33;32m\t✓ myls-lib-stat: done."
+	@echo "\033[33;00m"
 	@ar crv ./lib/libmyls.a build/myls.o
 
-mydu: mydu.o
+
+mydu:
+	gcc $(CFLAGS) -c ./commands/mydu.c -o ./build/mydu.o -w
 	gcc $(CFLAGS) -o ./commands/mydu ./build/mydu.o
+	@echo "\033[33;32m\t✓ mydu: done."
+	@echo "\033[33;00m"
+
+mydu-lib-stat:
+	gcc -c ./commands/mydu.c -o ./build/mydu.o -w
+	@echo "\033[33;32m\t✓ mydu-lib-stat: done."
+	@echo "\033[33;00m"
+	@ar crv ./lib/libmydu.a build/mydu.o
+
+mymkdir:
+	gcc $(CFLAGS) -Wall -c ./commands/mymkdir.c -o ./build/mymkdir.o -w
+	gcc $(CFLAGS) -o ./commands/mymkdir ./build/mymkdir.o
+	@echo "\033[33;32m\t✓ mymkdir: done."
+	@echo "\033[33;00m"
+
+mymkdir-lib-stat:
+	gcc -Wall -c ./commands/mymkdir.c -o ./build/mymkdir.o -w
+	@echo "\033[33;32m\t✓ mymkdir-lib-stat: done."
+	@echo "\033[33;00m"
+	@ar crv ./lib/libmymkdir.a build/mymkdir.o
 
 test-lib: main-lib.o getInput-lib.o functions-lib.o socket-lib.o
-	gcc -o ./bin/test ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls
+	gcc -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls -lmydu -lmymkdir
 	@echo "\033[33;32m\t✓ Build: done."
-	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
+	@echo "\033[33;00m"
+	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE STATIQUE\t\t\tDone"
 
 test: main.o getInput.o functions.o socket.o
-	gcc $(CFLAGS) -o ./bin/test ./build/main.o ./build/getInput.o ./build/functions.o
+	gcc $(CFLAGS) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o
 	@echo "\033[33;32m\t✓ Build: done."
-	@echo "\033[33;00m=== Compilation in debug mode\t\t\tDONkjn"
+	@echo "\033[33;00m"
+	@echo "\033[33;00m=== Compilation effectué en mode EXECUTABLE\t\t\tDone"
 
 main.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
 	gcc $(CFLAGS) -Wall -c ./src/main.c -o ./build/main.o
-	#gcc -Wall -o ./build/main.o ./src/main.c -L. -lmypwd
 	@echo "\033[33;32m\t✓ Build: main done."
 	@echo "\033[33;00m"
 
 main-lib.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
 	gcc -Wall -c ./src/main.c -o ./build/main.o
-	#gcc -Wall -o ./build/main.o ./src/main.c -L. -lmypwd
 	@echo "\033[33;32m\t✓ Build: main done."
 	@echo "\033[33;00m"
 
