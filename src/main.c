@@ -24,14 +24,59 @@
 #include "../inc/functions.h"
 #include "../inc/socket.h"
 
+#ifdef EXEC
+
+#else
+int executepwd(int argc, char *argv[]);
+int executels(int argc, char *argv[]);
+int executedu(int argc, char *argv[]);
+int executemkdir(int argc, char *argv[]);
+#endif
+
+
 #define TAILLE_MAX 256
 
+typedef int (*pfunc)(int, char *[]);
+
+struct SCmd
+{
+	char name[20];
+	char *nom;
+	pfunc pf;
+};
+typedef struct SCmd SCmd;
+
+
+SCmd* AddCmd()
+{
+	SCmd *scmd = NULL;
+	scmd=(SCmd*)malloc(sizeof(SCmd));
+	return scmd;
+}
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]))
+{
+	scmd->nom = scmd->name;
+	strcpy(scmd->nom, nom);
+	scmd->pf = pf;
+
+	return scmd;
+}
+
+char* GetName(SCmd* scmd){
+	return scmd->nom;
+}
+
+pfunc GetFunction(SCmd* scmd){
+	return scmd->pf;
+}
 
 
 int main() {
 	/*
 	Au démarrage on va lancer un processus serveur fils.
 	*/
+
 
 	char *input, **tab;
 	int i = 0;
@@ -49,7 +94,29 @@ int main() {
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
 	}
 	chdir("bin");
+	SCmd* listeFonctions[TAILLE_MAX];
+	for (i=0 ; i<TAILLE_MAX; i++) {
+		listeFonctions[i] = AddCmd();
+		#ifdef EXEC
 
+		#else
+		ModCmd(listeFonctions[i], "mypwd", &executepwd);
+		#endif
+	}
+#ifdef EXEC
+
+#else
+	listeFonctions[0] = ModCmd(listeFonctions[0], "mypwd", &executepwd);
+	listeFonctions[1] = ModCmd(listeFonctions[1], "myls", &executels);
+	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
+	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
+#endif
+	//listeFonctions[1] = AddCmd("myls", &executels);
+	//listeFonctions[2] = AddCmd("mymkdir", &executemkdir);
+	//listeFonctions[3] = AddCmd("mydu", &executedu);
+
+
+	//printf("TEST\nTEST: %s\n", GetName(listeFonctions[0]));
 	// Variables socket SERVER
 	pid_t child = fork();
 	int my_socket, new_socket, clilen;
@@ -163,7 +230,7 @@ int main() {
 				{
 
 					printf("[%d] %d\n",procBG, getpid());
-					etatProc[procBG] = executerInput(tab, workingdirlib, child);
+					etatProc[procBG] = executerInput(tab, workingdirlib, child, listeFonctions);
 					//fflush(stdout);
 				}
 				else {
@@ -176,7 +243,7 @@ int main() {
 			background = 0;
 		}
 		else {
-			executerInput(tab, workingdirlib, child);
+			executerInput(tab, workingdirlib, child, listeFonctions);
 			fflush(stdout); // Pour le bon affichage de la sortie.
 		}
 
@@ -208,7 +275,7 @@ int main() {
 	return 0;
 }
 
-int executerInput(char **tab, char *workingdirlib, pid_t child) {
+int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommandes[]) {
 
 	int i = 0;
 	int forceEnd = 0;
@@ -220,7 +287,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 	// FILE * fp;
 	int fd;
 	fpos_t pos; // Petite manipulation pour la gestion des stdout stderr;
-
+	int argcount = 0;
 	// Variables socket CLIENT
 	int sockfd, port_client, n;
    	struct sockaddr_in serv_addr;
@@ -239,7 +306,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 		for (i=0 ; i<TAILLE_MAX; i++) memset(argv2[i], '\0', TAILLE_MAX*sizeof(char));
 
 
-		parseCommande(tab[j], argv); // On parse le tableau suivant pour gérer les redirections et les opérateurs.
+		argcount = parseCommande(tab[j], argv); // On parse le tableau suivant pour gérer les redirections et les opérateurs.
 		if (tab[j+1][0] != '\n' && tab[j+1][0]!=0 )
 		{
 			parseCommande(tab[j+1], argv2);
@@ -309,7 +376,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 													// Or petit probleme, si jamais on lance la commande: myls>file.txt ça enregistre dans [ile.txt] !
 			}
 
-			status = callFunction(argv, workingdirlib);
+			status = callFunction(argcount, argv, workingdirlib, tabcommandes);
 
 		    if (andmode == 5)
 		    {
@@ -344,6 +411,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child) {
 				}
 
 				if (!strcmp(tab[j],"exit")) {
+					printf("Au revoir !\n");
 					kill(child, 9);
 					// On tue le process fils avant d'exit l'application
 					exit(1);

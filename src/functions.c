@@ -12,8 +12,9 @@
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
 int isFunction(const char *function) {
-	if (!strcmp(function,"myls")) return 0;
-	if (!strcmp(function,"mydu")) return 0;
+	// if (!strcmp(function,"myls")) return 0;
+	// if (!strcmp(function,"mydu")) return 0;
+	// if (!strcmp(function,"mypwd")) return 0;
 
 	if (!strcmp(function,"clear")) return 2; // Done
 	if (!strcmp(function,"cd")) return 2; // Done mais erreurs à gérer
@@ -46,24 +47,44 @@ char* getFunctionName(const char *function, char *function2) {
 	return function2;
 }
 
-int callFunction(char **argv, char *workingdirlib) {
+int callFunction(int argc, char **argv, char *workingdirlib, SCmd* tabcommandes[]) {
 	char temp[TAILLE_MAX];
+	char workingdir[1024];
+	getcwd(workingdir, 1024);
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		sprintf(temp, "%s/%s", workingdirlib, argv[0]);
-		if (access(temp, F_OK ) != 0)
+		#ifdef EXEC
+
+		#else
+		// Mode librairie statiques
+		int i = 0;
+		while(i < TAILLE_MAX) {
+			if (!strcmp(argv[0], GetName(tabcommandes[i]))) {
+				status = (GetFunction(tabcommandes[i]))(argc, argv);
+				exit(status);
+			}
+			i++;
+		}
+		#endif
+
+		sprintf(temp, "%s/%s", workingdir, argv[0]);
+		if (access(temp, F_OK) != 0) 
 		{
-			sprintf(temp, "/bin/%s", argv[0]);
+			sprintf(temp, "%s/%s", workingdirlib, argv[0]);
 			if (access(temp, F_OK ) != 0)
 			{
-				sprintf(temp, "/usr/local/bin/%s", argv[0]);
+				sprintf(temp, "/bin/%s", argv[0]);
 				if (access(temp, F_OK ) != 0)
 				{
-					sprintf(temp, "/usr/bin/%s", argv[0]);
+					sprintf(temp, "/usr/local/bin/%s", argv[0]);
 					if (access(temp, F_OK ) != 0)
 					{
-						sprintf(temp, "/sbin/%s", argv[0]);
+						sprintf(temp, "/usr/bin/%s", argv[0]);
+						if (access(temp, F_OK ) != 0)
+						{
+							sprintf(temp, "/sbin/%s", argv[0]);
+						}
 					}
 				}
 			}
