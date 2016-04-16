@@ -4,6 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 
+#include "mypwd.h"
+
+
 char NomRepertoire[1024];
 
 int pwd()
@@ -15,7 +18,7 @@ int pwd()
 	return 0;
 }
 
-int main(int argc, char *argv[])
+int executepwd(int argc, char *argv[])
 {
 	int c;
 	if((c=getopt(argc, argv, ":LP")) != -1)
@@ -38,3 +41,10 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
+
+#ifdef EXEC
+int main(int argc, char *argv[])
+{
+	return executepwd(argc, argv);
+}
+#endif
