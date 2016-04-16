@@ -1,5 +1,0 @@
-drwxr-xr-x 4 anthonygriffon staff      136 2016-04-12 11:53 .
-drwxr-xr-x 19 anthonygriffon staff      646 2016-04-08 15:49 ..
--rw-r--r-- 1 anthonygriffon staff        0 2016-04-12 11:53 file.txt
--rwxr-xr-x 1 anthonygriffon staff    18868 2016-04-12 11:52 test
-EXITSTATUS: 0

@@ -11,11 +11,13 @@ EXEC=Hache
 CFLAGS=-DEXEC
 
 hello: 
-	@echo "\033[31;01m\t✕ make <all | all-lib | all-lib-dyn>"
+	@echo "\033[31;01m\t✕ make <all | all-lib | all-lib-dyn | cmd>"
 
 all: clean proper init myls mydu mypwd mymkdir test
 
 all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat test-lib
+
+cmd: clean proper init myls mydu mypwd mymkdir
 
 init:
 	@mkdir -p build	
@@ -70,13 +72,13 @@ mymkdir-lib-stat:
 	@echo "\033[33;00m"
 	@ar crv ./lib/libmymkdir.a build/mymkdir.o
 
-test-lib: main-lib.o getInput-lib.o functions-lib.o socket-lib.o
+test-lib: main-lib.o getInput-lib.o functions-lib.o
 	gcc -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls -lmydu -lmymkdir
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m"
 	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE STATIQUE\t\t\tDone"
 
-test: main.o getInput.o functions.o socket.o
+test: main.o getInput.o functions.o
 	gcc $(CFLAGS) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m"
@@ -111,28 +113,6 @@ functions-lib.o: ./src/functions.c
 	gcc -Wall -c ./src/functions.c -o ./build/functions.o
 	@echo "\033[33;32m\t✓ Build: function done."
 	@echo "\033[33;00m"
-
-socket.o: ./src/socket.c
-	gcc $(CFLAGS) -Wall -c ./src/socket.c -o ./build/socket.o
-	@echo "\033[33;32m\t✓ Build: socket done."
-	@echo "\033[33;00m"
-
-socket-lib.o: ./src/socket.c
-	gcc -Wall -c ./src/socket.c -o ./build/socket.o
-	@echo "\033[33;32m\t✓ Build: socket done."
-	@echo "\033[33;00m"
-
-myls.o: ./commands/myls.c
-	gcc -c ./commands/myls.c -o ./build/myls.o -w
-
-myls2.o: ./commands/myls2.c
-	gcc -c ./commands/myls2.c -o ./build/myls2.o -w
-
-myls2: myls2.o
-	gcc -o ./commands/myls2 ./build/myls2.o
-
-mydu.o: ./commands/mydu.c
-	gcc -c ./commands/mydu.c -o ./build/mydu.o -w
 
 
 
