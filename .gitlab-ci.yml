@@ -2,7 +2,8 @@ image: gcc:5.3
 Build:
   stage: build
   script:
-    - make
+    - make all
+    - make all-lib
   only:
     - master
   tags:
