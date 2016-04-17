@@ -7,7 +7,7 @@
 
 # include "../inc/functions.h"
 
-# define TAILLE_MAX 256
+# define TAILLE_MAX 1024
 
 
 //	Booléen qui renvoie 1 si la fonction existe, 0 sinon 2 si c'est une fonction bash
@@ -54,15 +54,13 @@ int callFunction(int argc, char **argv, char *workingdirlib, SCmd* tabcommandes[
 	int status;
 	if (fork() == 0) {
 		// on est dans le fils
-		#ifdef EXEC
-
-		#else
+		#ifdef LIB
 		// Mode librairie statiques
 		int i = 0;
 		while(i < TAILLE_MAX) {
 			if (!strcmp(argv[0], GetName(tabcommandes[i]))) {
 				status = (GetFunction(tabcommandes[i]))(argc, argv);
-				exit(status);
+				exit(1);
 			}
 			i++;
 		}

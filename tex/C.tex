@@ -1,0 +1,804 @@
+\documentclass[11pt,a4paper]{memoir}
+
+\def\MyFileVersion{Version 0.1a, 2016/04/15}
+\setlrmarginsandblock{2.5cm}{*}{1} 
+\setulmarginsandblock{2.5cm}{2.5cm}{*}
+\setmarginnotes{2.5mm}{2cm}{1em}
+\checkandfixthelayout
+
+\usepackage[latin1]{inputenc}
+\usepackage[french]{babel}
+\usepackage[french]{isodate}
+\usepackage[T1]{fontenc}
+
+\usepackage{
+  calc,
+  graphicx,
+  url,
+  fancyvrb,
+  multicol,
+  kvsetkeys
+}
+
+\usepackage[svgnames,dvipsnames]{xcolor}
+\definecolor{felinesrcbgcolor}{rgb}{1,1,0.85}
+\definecolor{felinesrcbgcolor}{rgb}{0.94,0.97,1}
+\definecolor{felineframe}{rgb}{0.79,0.88,1}
+\definecolor{myorange}{rgb}{1,0.375,0}
+
+\usepackage[draft]{fixme}
+\usepackage{fourier}
+\usepackage[scaled]{luximono}
+\newcommand\starbreak{\fancybreak{\decosix\quad\decosix\quad\decosix}}
+
+\usepackage[scaled]{berasans}
+
+\chapterstyle{ell}
+\renewcommand\tocheadstart{}
+\renewcommand\printtoctitle[1]{}
+
+\raggedbottom
+\fvset{frame=lines,
+  framesep=3mm,
+  framerule=3pt,
+  fontsize=\small,
+  rulecolor=\color{myorange},
+  formatcom=\color{DarkGreen},
+}
+\newoutputstream{StyleList}
+ \newoutputstream{OutputStyle}%
+ \openoutputfile{\jobname.styles}{StyleList}
+\def\OutputStylePostfix{-style}
+\def\CurrentChapterStyle{}
+\makeatletter
+\kv@set@family@handler{MCS}{%
+  \xdef\CurrentChapterStyle{#1}%
+}
+\define@key{MCS}{pages}{%\typeout{xxx: #1}
+  \global\@namedef{MCS@pages@\CurrentChapterStyle}{#1}%
+}
+\define@key{MCS}{trim}{%\typeout{xxx: #1}
+  \global\@namedef{MCS@trim@\CurrentChapterStyle}{#1}%
+}
+\def\defaulttrim{0 0 0 0}
+\newif\ifSCS@full
+\newcounter{MCS}
+\newenvironment{@showchapterstyle}[1]{%
+  \kvsetkeys{MCS}{#1}%
+  \ifSCS@full%
+    \edef\hest{\CurrentChapterStyle\OutputStylePostfix\space page \@nameuse{MCS@pages@\CurrentChapterStyle}}
+    \addtostream{StyleList}{\hest}%
+  \else%
+    \addtostream{StyleList}{\CurrentChapterStyle\OutputStylePostfix}%
+  \fi%
+  \openoutputfile{\CurrentChapterStyle\OutputStylePostfix.tex}{OutputStyle}%
+  \ifSCS@full%
+    \addtostream{OutputStyle}{%
+      \protect\let\protect\STARTCODE\relax^^J%
+      \protect\let\protect\STOPCODE\relax^^J%
+      \protect\STARTCODE%
+    }%
+  \else%
+    \addtostream{OutputStyle}{%
+      \protect\documentclass{memoir}^^J%
+      \protect\let\protect\STARTCODE\relax^^J%
+      \protect\let\protect\STOPCODE\relax^^J%
+      \protect\STARTCODE%
+    }%
+  \fi%
+  \writeverbatim{OutputStyle}%
+}{%
+  \endwriteverbatim\relax%
+  \ifSCS@full%
+    \addtostream{OutputStyle}{%
+      \protect\STOPCODE%
+    }
+  \else% 
+    \addtostream{OutputStyle}{%
+      \protect\chapterstyle{\CurrentChapterStyle}^^J%
+      \protect\STOPCODE^^J%
+      \protect\setlength\afterchapskip{\onelineskip}^^J%
+      \protect\setlength\beforechapskip{\onelineskip}^^J%
+      \protect\usepackage{lipsum}^^J%
+      \protect\begin{document}^^J%
+      \protect\input{chapterexample.tex}^^J%
+      \protect\end{document}%
+    }%
+  \fi%
+  \closeoutputstream{OutputStyle}%
+  \edef\FancyVerbStartString{\string\STARTCODE}%
+  \edef\FancyVerbStopString{\string\STOPCODE}%
+  \vskip\z@\@plus\bottomsectionskip
+  \penalty\z@
+  \vskip\z@\@plus -\bottomsectionskip
+  \phantomsection
+  \addcontentsline{toc}{section}{\CurrentChapterStyle}
+  \VerbatimInput[label={\small Source for the \textsf{\CurrentChapterStyle} style}]{\CurrentChapterStyle-style.tex}%%
+  \par\noindent%
+  \IfFileExists{\CurrentChapterStyle\OutputStylePostfix.pdf}{%
+    \fboxsep=4pt%
+    \begin{adjustwidth}{-\fboxsep-\fboxrule}{-\fboxsep-\fboxrule}%
+%      \begin{framed}%
+      \@ifundefined{MCS@pages@\CurrentChapterStyle}{%
+          \fcolorbox{felineframe}{felinesrcbgcolor}{%
+            \includegraphics[width=\textwidth,clip]{%
+              \CurrentChapterStyle\OutputStylePostfix}}%
+        }{%
+          \edef\nisse{\@nameuse{MCS@pages@\CurrentChapterStyle}}
+          \@for\ITEM:=\nisse\do{
+            \ifpdf%
+              \fcolorbox{felineframe}{felinesrcbgcolor}{\includegraphics%
+              [width=\textwidth,page=\ITEM,clip]%
+              {\CurrentChapterStyle\OutputStylePostfix}}%
+            \else%
+              \fcolorbox{felineframe}{felinesrcbgcolor}{\includegraphics%
+              [width=\textwidth,clip]%
+              {\CurrentChapterStyle\OutputStylePostfix-\ITEM}}%
+            \fi%
+            \bigskip%
+            \fancybreak{$***$}%
+            \bigskip
+          }%
+        }%
+%      \end{framed}%
+    \end{adjustwidth}
+  }{\fbox{File \CurrentChapterStyle-style.* does not exist}}
+  \vskip1em plus 1em minus -.5em\noindent%
+}
+% the two actual environments, the stared one will let you add entire
+% documents, while the unstared one will only display sniplets
+\newenvironment{showchapterstyle}[1]{%
+\SCS@fullfalse\@showchapterstyle{#1}}{\end@showchapterstyle}
+\newenvironment{showchapterstyle*}[1]{%
+\SCS@fulltrue\@showchapterstyle{#1}}{\end@showchapterstyle\SCS@fullfalse}
+\newcommand\@Arg[1]{\textnormal{$\langle$\textit{#1}$\rangle$}}
+\newcommand\@Args[1]{\texttt{\{\textnormal{$\langle$\textit{#1}$\rangle$}\}}}
+\newcommand\Arg{\@ifstar{\@Args}{\@Arg}}
+\renewcommand\cs[1]{\texttt{\textbackslash #1}}
+\makeatother
+\newenvironment{syntax}{%
+  \vskip.5\onelineskip%
+  \begin{adjustwidth}{0pt}{0pt}
+    \parindent=0pt%
+    \obeylines%
+    \let\\=\relax%
+  }{%
+  \end{adjustwidth}%
+  \vskip.5\onelineskip%
+}
+\newenvironment{syntax*}{%
+  \vskip.5\onelineskip%
+  \begin{adjustwidth}{0pt}{0pt}
+    \parindent=0pt%
+  }{%
+  \end{adjustwidth}%
+  \vskip.5\onelineskip%
+}
+
+\newtheorem{remark}{Remark}
+
+\AtEndDocument{\closeoutputstream{StyleList}}
+\pagestyle{plain}
+
+\ifpdf
+\usepackage[colorlinks]{hyperref}
+\fi
+
+
+
+\begin{document}
+
+\title{Projet C: HACHE\thanks{\MyFileVersion}}
+\author{Anthony GRIFFON, Eliot CHAUVINEAU, Meriem EL QSIMI, Axel JUGUET}
+\maketitle
+
+Le but de ce document, est de fournir un compte rendu de notre projet, le compte rendu prendra la forme d'un manuel d'utilisation détaillant les différentes fonctionnalités de notre terminal, HACHE.
+\newline
+\newline
+A la fin du document, il y a un chapitre où chaque membre du projet fera un compte rendu personnel du projet.
+
+
+\bigskip
+\starbreak
+
+\bigskip
+
+Le projet HACHE, est découpé en deux parties, chaque partie comporte deux membres. La première équipe, chargé de s'occuper de la partie du terminal et de la mise en place de la compilation à l'aide de librairies statiques et dynamiques en lui même est composé de Anthony GRIFFON, et de Eliot CHAUVINEAU 
+\newline
+\newline
+La seconde équipe, qui se charge des différentes commandes à exécuter, se compose de Meriem EL QSIMI et Axel JUGUET.
+\bigskip
+\starbreak
+\bigskip
+Notre projet se trouve sur le Gitlab de l'Université de Nantes, à l'adresse: \url{https://gitlab.univ-nantes.fr/E158196C/Hache}.
+
+\newpage
+
+
+\tableofcontents*
+
+\newpage
+\chapter{Première utilisation du terminal}
+\label{cha:first-use}
+
+\section{Compilation du programme}
+Avant d'être utilisé, le programme se doit d'être compilé. Une fois les sources obtenues, ce placer dans le terminal usuel, et exécuter:
+
+\begin{Verbatim}
+bash4.2$> make
+\end{Verbatim}
+
+La compilation peut se faire de différente façons, nous allons voir toutes les options possibles au make.
+
+\subsection{Avertissement}
+Le terminal peut utiliser des librairies et fonctions non utilisé sous les systèmes WINDOWS©, le logiciel a été testé sous UBUNTU 14.04 et OS X 10.11.2.
+\newline
+La compilation du programme nécessite la présence du compilateur GCC >= 4.8 ou CLANG >= 7.0.2.
+\newline
+\newline
+Le programme peut compiler sous d'autres versions de GCC ou CLANG, cependant, nous ne le garantissons pas.
+
+\subsection{Make all}
+En exécutant la commande "make all", le terminal ainsi que toutes les commandes attachées \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} seront générés en mode exécutable. L'exécutable du terminal sera alors enregistré dans le dossier "./bin/".
+
+\subsection{Make all-lib}
+En exécutant la commande "make all-lib", le terminal ainsi que toutes les commandes attacheés \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} seront générés en mode librairie statique. L'exécutable pourra être déplacer n'importe ou, on aura pas besoin d'indiquer au terminal où se trouvent les exécutables pour les exécuter.\newline
+On pourra cependant quand même l'indiquer pour ajouter des exécutables.
+
+\subsection{Make all-lib-dyn}
+En exécutant la commande "make all-lib-dyn", la compilation sera effectué en mode librairies dynamiques, l'exécutable devra lire les commandes dans les fichiers .so compilés dans le dossier "lib". De cette façon, on pourra mettre à jour les librairies sans pour autant avoir à recompiler le terminal.
+\newline
+
+
+
+\subsection{Make cmd}
+L'utilisation de cette commande va permettre la génération des fichiers commandes disponible dans ce chapitre \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)}.
+
+
+\subsection{Make proper}
+L'utilisation de cette commande entrainera la destruction de tous les fichiers générés à la compilation du programme, que ce soit les fichiers .o dans le dossier "build" ou les exécutables générés qui n'ont pas été déplacé.
+
+
+\subsection{Make clean}
+L'utilisation de cette commande entrainera la destruction de tous les fichiers générés à la compilation du programme hormis les fichiers exécutables.
+
+\section{Mise en place des variables}
+\label{cha:section-variables}
+Une fois le programme compilé, si vous avez utilisé la compilation normale ou dynamiques, des exécutables ou des librairies sont générés pour certaines commandes \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} et des chemins doivent être spécifiés.
+\newline
+\newline
+Il est important pour notre terminal de spécifier l'emplacement de ces programmes. C'est pourquoi dans le répertoire principal de HACHE, là vous effectuez la commande "make", se trouve un script à executer.
+
+\begin{Verbatim}[label={define\_variable.sh}]
+#!/bin/bash
+#
+echo "Usage: . ./define_variable.sh"
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/lib
+export PTERMINAL=$(pwd)/commands
+\end{Verbatim}
+
+Ce script est à exécuter à l'aide de cette commande:
+
+\begin{Verbatim}[label={bash}]
+bash4.2$> . ./define_variable.sh"
+\end{Verbatim}
+
+\section{Démarrage du programme}
+
+Démarrons maintenant le programme, une fois la compilation terminé, l'exécutable du programme se trouve dans le dossier "bin". 
+
+\begin{Verbatim}[label={bash}]
+bash4.2$> cd bin
+bash4.2$> ./hache
+\end{Verbatim}
+
+Une fois le programme lancé vous devriez avoir cet affichage\footnote{Le port du serveur est aléatoire entre 10000 et 20000.}:
+
+\begin{Verbatim}[label={Hache}]
+Serveur lancé sur le port: 10719.
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+Si jamais vous avez le message: "Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL." reportez vous à \hyperref[cha:section-variables]{cette section}.
+\newline
+\newline
+On peut observer qu'un serveur se lance sur un port, pour plus d'information, il faut regarder la commande "connect".
+\newline
+Nous avons aussi le fil d'Arianne qui s'affiche avant d'entrer les commandes.
+
+\chapter{Commandes liées au terminal}
+\label{cha:terminal-all-cmd}
+
+Nous allons lister et expliquer les commandes liées au terminal, ce sont les commandes qui ne sont pas exécutés par des programmes externes mais par le programme HACHE.
+
+\section{Se déplacer dans les dossiers (cd)}
+La première de ces commandes concerne la capacité à naviguer entre différents dossiers, la commande "cd".
+\newline
+Cette commande ne prend qu'une option: le dossier où l'on veut aller.
+Voici quelques exemples de la commande.
+\newline
+\begin{Verbatim}[label={Hache}]
+Serveur lancé sur le port: 10719.
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> cd ..
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/> cd
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/> cd lizejdelzmdjkezmdk
+Erreur:: No such file or directory
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/>
+\end{Verbatim}
+
+\section{Effacer le résultats des précédentes commandes (clear)}
+Il s'agit d'une commande n'ayant pour objectif qu'une meilleure visibilité. Cette commande permet d'effacer toutes les commandes et tous les résultats entrés précédemment pour qu'il ne reste plus qu'une ligne sur le terminal.
+\newline
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+\section{Quitter le terminal (exit)}
+Pour quitter le programme HACHE, il suffit d'entrer cette commande, le programme va alors quitter, le serveur de connection à distance va se stopper et vous allez retourner à votre précédent programme.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> exit
+Au revoir !
+\end{Verbatim}
+
+
+\section{Se connecter à un serveur distant (connect)}
+\label{se:connect}
+
+Cette commande permet de se connecter à d'autre terminaux HACHE à distance, la connection n'est pas sécurisé. On évitera de transmettre des données sensibles via cette commande.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect
+Utilisation: connect host port.
+\end{Verbatim}
+
+Deux arguments doivent être renseigné pour cette commande.
+
+\subsection{L'hôte}
+Le premier argument à être donné est l'hôte, il peut être sous la forme d'une adresse IP (192.168.1.23) ou alors d'un nom de domaine (http://perdu.com).
+
+Le programme est capable d'atteindre l'hôte même en renseignant un domaine ou une adresse internet, cependant, il est préférable de privilégier l'adresse IP.
+
+\subsection{Le port}
+Le port à être renseigné est affiché sur le serveur auquel vous souhaitez vous connecter. Le port d'écoute du serveur s'affiche lors du démarrage d'un terminal HACHE.
+
+\subsection{La connection}
+Le principe de connection au serveur est différent des protocoles normaux, lorsque vous rentre la commande connect avec les paramètres et que vous lancez la commande, cela ne vous connecte pas. Le terminal se met en mode passif, il va attendre les requêtes que vous voulez envoyer au serveur distant.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
+prompt-dp$> 
+\end{Verbatim}
+
+Pour envoyer une requête au serveur, il ne vous reste qu'à taper la commande et appuyer sur entrée.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
+prompt-dp$> echo hey
+hey
+prompt-dp$> 
+\end{Verbatim}
+
+\subsection{Multi-utilisateurs}
+On peut se demander pourquoi le système est construit de cette façon, lors de la conception nous avons voulu privilégier un système qui permet à un serveur d'accepter plusieurs clients en même temps sans avoir à multiplier les systèmes d'écoutes sur le serveur.
+\newline
+\newline
+C'est dans cette optique que nous est venu cette conception particulière, avec laquelle il est possible de connecter plusieurs utilisateurs sur le même serveur distant.
+
+\subsection{Quitter le mode connecté}
+Pour quitter le mode connecté, il suffit de taper la commande "exit".
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
+prompt-dp$> exit
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
+\end{Verbatim}
+
+\newpage
+\chapter{Le langage du terminal}
+\label{cha:langage}
+Dans ce chapitre nous allons aborder le langage du terminal, ces différentes possibilités pour taper des lignes de commandes plus ou moins complexes.
+
+\section{Priorités}
+Notre terminal est tel que on ne peut pas grouper les commandes dans des parenthèses, il va lire la ligne de gauche à droite dans l'ordre sans se soucier de groupes de commandes.
+
+
+\section{Les redirection}
+Nous allons voir les redirections, les redirections permettent d'orienter les programmes. Par exemple, si nous donnons le un poème écrit par Nabila l'entrée de notre programme de traduction et que nous orientons la sortie sur un fichier texte, nous allons avoir dans ce fichier texte, le poème, lisible.
+\newline
+\newline
+Avec HACHE il est possible de:
+\begin{itemize}
+\item[-]Rediriger la sortie d'une commande vers un fichier.
+\item[-]Ajouter la sortie d'une commande à la fin d'un fichier.
+\item[-]Rediriger le contenu d'un fichier vers l'entrée d'une commande.
+\end{itemize}
+
+\subsection{Rediriger la sortie d'une commande vers un fichier}
+Il est possible de rediriger la sortie d'une commande vers un fichier avec l'opérateur ">".
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo "Youhou" > file.txt
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
+\end{Verbatim}
+Le résultat se trouve alors dans le fichier file.txt
+\begin{Verbatim}[label={file.txt}]
+"Youhou"
+\end{Verbatim}
+
+\subsection{Ajouter la sortie d'une commande à la fin d'un fichier}
+Il est aussi possible d'ajouter à la suite d'un fichier la sortie d'une commande avec l'opérateur ">>".
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo "Youhou" > file.txt
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo suite >> file.txt
+\end{Verbatim}
+Le résultat se trouve alors dans le fichier file.txt
+\begin{Verbatim}[label={file.txt}]
+"Youhou"
+suite
+\end{Verbatim}
+
+\subsection{Rediriger le contenu d'un fichier vers l'entrée d'une commande}
+Dans certaines commandes il peut être utile de remplacer l'entrée standard par un fichier, il est possible de le faire avec "<".
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> cat < file.txt
+"youhou"
+suite
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
+\end{Verbatim}
+
+
+\section{La pipe}
+Pour connecter la sortie d'une commande sur l'entrée dune autre, avec les redirections, il est nécessaire de diriger la sortie d'une commande vers un fichier et rediriger le fichier vers l'entré de la commande.
+\newline
+Cette manipulation peut s'écrire en une ligne avec le pipe "|".
+\newline
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls -l | grep README.md
+-rwxr-xr-x   1 anthonygriffon  staff  3390  4 avr 11:53 README.md
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+\section{Les opérateurs logiques}
+Il est possible de complexifier les commandes avec les opérateurs logiques "et" et "ou".
+\newline
+Chaque programme exécuté se termine en renvoyant un code de sortie, il s'agit soit d'un code d'erreur soit d'un code de "réussite" (le code d'erreur 0).
+\newline
+\subsection{L'opérateur ET}
+L'opérateur "ET" est symbolisé par "\&\&" dans HACHE.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls && pwd
+\end{Verbatim}
+
+Ici la commande ls s'exécute en première, si elle s'exécute sans erreur, alors la commande pwd s'execute à son tour, si jamais ce n'est pas le cas, la commande pwd ne s'exécute pas.
+\newline
+Voici différents exemples:
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo 1 && pwd
+1
+/Users/anthonygriffon/Desktop/Hache/bin
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls dzkejdhzkl && pwd
+ls: dzkejdhzkl: No such file or directory
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> pwd && pwd && echo 1 && ls ldezkdj
+/Users/anthonygriffon/Desktop/Hache/bin
+/Users/anthonygriffon/Desktop/Hache/bin
+1
+ls: ldezkdj: No such file or directory
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+\subsection{L'opérateur OU}
+L'opérateur "OU" est symbolisé par "||" dans HACHE.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls || pwd
+\end{Verbatim}
+
+Ici la commande ls s'exécute avec succès, de ce fait la commande pwd ne s'exécutera pas. 
+Quelques exemples:
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo 1 || pwd
+1
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls dzkejdhzkl || pwd
+ls: dzkejdhzkl: No such file or directory
+/Users/anthonygriffon/Desktop/Hache/bin
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> pwd || pwd || echo 1 || ls ldezkdj
+/Users/anthonygriffon/Desktop/Hache/bin
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+\section{Les taches de fonds}
+Le terminal HACHE permet d'exécuter les commandes en tache de fond. Pour ce faire, il suffit d'utiliser l'opérateur \& en fin de ligne.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
+[1] 22233
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
+\end{Verbatim}
+
+Ici, les commandes vont s'exécuter dans un terminal HACHE avec pour PID 22233. Cependant tout ce qui s'affiche dans la commande en tache de fond s'affiche dans le terminal actuel.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
+[1] 22233
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+drwxr-xr-x 6 anthonygriffon staff      204 2016-04-16 21:49 .
+drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
+-rw-r--r-- 1 anthonygriffon staff     6148 2016-04-16 19:26 .DS_Store
+-rw-r--r-- 1 anthonygriffon staff       15 2016-04-16 21:24 file.txt
+-rwxr-xr-x 1 anthonygriffon staff    29120 2016-04-16 21:49 Hache
+drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 21:04 Hache.dSYM
+
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+
+\end{Verbatim}
+
+\chapter{Les différentes commandes}
+
+\section{Afficher le contenu d'un dossier (myls)}
+La commande myls affiche le contenu du répertoire courant. Aucune options.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> myls
+drwxr-xr-x 6 anthonygriffon staff      204 2016-04-16 21:49 .
+drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
+-rw-r--r-- 1 anthonygriffon staff     6148 2016-04-16 19:26 .DS_Store
+-rw-r--r-- 1 anthonygriffon staff       15 2016-04-16 21:24 file.txt
+-rwxr-xr-x 1 anthonygriffon staff    29120 2016-04-16 21:49 Hache
+drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 21:04 Hache.dSYM
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+\end{Verbatim}
+
+\section{Copier les fichiers (mycp)}
+La commande mycp permet de copier un fichier.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop/Hache> mycp
+Usage : mycp source destination
+prompt1.0: /Users/anthonygriffon/Desktop/Hache> 
+\end{Verbatim}
+
+\section{Bouger les fichiers (mymv)}
+La commande mymv permet de changer le chemin d'un fichier.
+
+\section{Créer des dossiers (mymkdir)}
+La commande mymkdir permet de créer un dossier.
+
+
+
+\section{Afficher le répertoire courant (mypwd)}
+
+
+\section{Afficher (mydu)}
+Affiche le nombre d'octets occupés dans le répertoire courant.
+
+\begin{Verbatim}[label={Hache}]
+prompt1.0: /Users/anthonygriffon/Desktop> mydu
+Taille : 877091682
+prompt1.0: /Users/anthonygriffon/Desktop> 
+\end{Verbatim}
+
+\chapter{Analyse du code}
+\section{Cppchecker}
+
+\begin{Verbatim}[label={cppcheck src/*.c src/*.h inc/*.c inc/*.h commands/*.h commands/*.c > log2.txt 2>\&1}]
+Checking commands/mycp.c...
+Checking commands/mycp.c: DYN...
+Checking commands/mycp.c: EXEC...
+1/17 files checked 14% done
+Checking commands/mydu.c...
+Checking commands/mydu.c: DYN...
+Checking commands/mydu.c: EXEC...
+2/17 files checked 19% done
+Checking commands/mydu.h...
+3/17 files checked 19% done
+Checking commands/myls.c...
+Checking commands/myls.c: DYN...
+Checking commands/myls.c: EXEC...
+4/17 files checked 28% done
+Checking commands/myls.h...
+5/17 files checked 28% done
+Checking commands/mymkdir.c...
+Checking commands/mymkdir.c: DYN...
+Checking commands/mymkdir.c: EXEC...
+6/17 files checked 33% done
+Checking commands/mymkdir.h...
+7/17 files checked 34% done
+Checking commands/mypwd.c...
+Checking commands/mypwd.c: DYN...
+Checking commands/mypwd.c: EXEC...
+8/17 files checked 36% done
+Checking commands/mypwd.h...
+9/17 files checked 37% done
+Checking inc/functions.h...
+10/17 files checked 38% done
+Checking inc/getInput.h...
+11/17 files checked 38% done
+Checking inc/socket.h...
+12/17 files checked 38% done
+Checking src/functions.c...
+Checking src/functions.c: LIB...
+13/17 files checked 58% done
+Checking src/getInput.c...
+14/17 files checked 58% done
+Checking src/main.c...
+Checking src/main.c: DYN...
+Checking src/main.c: LIB...
+Checking src/main.c: __linux__...
+Checking src/main.c: linux...
+15/17 files checked 97% done
+Checking src/opttest.c...
+16/17 files checked 99% done
+Checking src/socket.h...
+17/17 files checked 100% done
+\end{Verbatim}
+
+
+
+\section{Valgrind}
+Voici un rapport valgrind de HACHE après une utilisation de quelques commandes personnelles (myls, mykdir, mydu, mypwd, exit).
+
+
+\begin{Verbatim}[label={valgrind ./Hache > log.txt 2>\&1}]
+==22326== Memcheck, a memory error detector
+==22326== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==22326== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==22326== Command: ./Hache
+==22326== 
+Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des 
+executablesdans la variable d'environnement PTERMINAL.
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> Les librairies personnels ne sont pas 
+chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement 
+PTERMINAL
+Serveur lancé sur le port: 19015.
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> myls
+--22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option
+--22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option (repeated 2 times)
+--22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option (repeated 4 times)
+--22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option (repeated 8 times)
+drwxr-xr-x 9 anthonygriffon staff      306 2016-04-16 22:44 .
+drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
+-rw-r--r-- 1 anthonygriffon staff     6148 2016-04-16 19:26 .DS_Store
+-rw-r--r-- 1 anthonygriffon staff       15 2016-04-16 21:24 file.txt
+-rwxr-xr-x 1 anthonygriffon staff    29120 2016-04-16 21:49 Hache
+-rw-r--r-- 1 anthonygriffon staff     4532 2016-04-16 22:43 hache-valgrind
+drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 22:39 Hache.dSYM
+drwxr-xr-x 2 anthonygriffon staff       68 2016-04-16 22:43 Hey
+-rw-r--r-- 1 anthonygriffon staff      959 2016-04-16 22:45 log.txt
+==22328== 
+==22328== HEAP SUMMARY:
+==22328==     in use at exit: 3,270,931 bytes in 4,359 blocks
+==22328==   total heap usage: 4,579 allocs, 220 frees, 3,290,809 bytes allocated
+==22328== 
+==22328== LEAK SUMMARY:
+==22328==    definitely lost: 1,344 bytes in 8 blocks
+==22328==    indirectly lost: 4,200 bytes in 8 blocks
+==22328==      possibly lost: 0 bytes in 0 blocks
+==22328==    still reachable: 3,233,829 bytes in 4,149 blocks
+==22328==         suppressed: 31,558 bytes in 194 blocks
+==22328== Rerun with --leak-check=full to see details of leaked memory
+==22328== 
+==22328== For counts of detected and suppressed errors, rerun with: -v
+==22328== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mykdir blbl
+Erreur : No such file or directory
+==22329== 
+==22329== HEAP SUMMARY:
+==22329==     in use at exit: 3,253,094 bytes in 4,300 blocks
+==22329==   total heap usage: 7,458 allocs, 3,158 frees, 6,429,622 bytes allocated
+==22329== 
+==22329== LEAK SUMMARY:
+==22329==    definitely lost: 2,080 bytes in 4 blocks
+==22329==    indirectly lost: 4,096 bytes in 2 blocks
+==22329==      possibly lost: 0 bytes in 0 blocks
+==22329==    still reachable: 3,215,360 bytes in 4,100 blocks
+==22329==         suppressed: 31,558 bytes in 194 blocks
+==22329== Rerun with --leak-check=full to see details of leaked memory
+==22329== 
+==22329== For counts of detected and suppressed errors, rerun with: -v
+==22329== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mydu
+Taille : 52756
+==22330== 
+==22330== HEAP SUMMARY:
+==22330==     in use at exit: 3,254,118 bytes in 4,301 blocks
+==22330==   total heap usage: 10,552 allocs, 6,251 frees, 9,626,726 bytes allocated
+==22330== 
+==22330== LEAK SUMMARY:
+==22330==    definitely lost: 3,104 bytes in 5 blocks
+==22330==    indirectly lost: 4,096 bytes in 2 blocks
+==22330==      possibly lost: 0 bytes in 0 blocks
+==22330==    still reachable: 3,215,360 bytes in 4,100 blocks
+==22330==         suppressed: 31,558 bytes in 194 blocks
+==22330== Rerun with --leak-check=full to see details of leaked memory
+==22330== 
+==22330== For counts of detected and suppressed errors, rerun with: -v
+==22330== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mypwd
+/Users/anthonygriffon/Desktop/Hache/bin
+==22331== 
+==22331== HEAP SUMMARY:
+==22331==     in use at exit: 3,255,142 bytes in 4,302 blocks
+==22331==   total heap usage: 13,610 allocs, 9,308 frees, 12,772,278 bytes allocated
+==22331== 
+==22331== LEAK SUMMARY:
+==22331==    definitely lost: 4,128 bytes in 6 blocks
+==22331==    indirectly lost: 4,096 bytes in 2 blocks
+==22331==      possibly lost: 0 bytes in 0 blocks
+==22331==    still reachable: 3,215,360 bytes in 4,100 blocks
+==22331==         suppressed: 31,558 bytes in 194 blocks
+==22331== Rerun with --leak-check=full to see details of leaked memory
+==22331== 
+==22331== For counts of detected and suppressed errors, rerun with: -v
+==22331== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> exit
+Au revoir !
+==22326== 
+==22326== HEAP SUMMARY:
+==22326==     in use at exit: 3,246,795 bytes in 4,292 blocks
+==22326==   total heap usage: 16,675 allocs, 12,383 frees, 15,934,235 bytes allocated
+==22326== 
+==22326== LEAK SUMMARY:
+==22326==    definitely lost: 5,120 bytes in 5 blocks
+==22326==    indirectly lost: 0 bytes in 0 blocks
+==22326==      possibly lost: 0 bytes in 0 blocks
+==22326==    still reachable: 3,215,360 bytes in 4,100 blocks
+==22326==         suppressed: 26,315 bytes in 187 blocks
+==22326== Rerun with --leak-check=full to see details of leaked memory
+==22326== 
+==22326== For counts of detected and suppressed errors, rerun with: -v
+==22326== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+\end{Verbatim}
+
+On peut observer à la sortie 3,246,795 bytes utilisé, et seulement 5,120 bytes de fuite dans l'application, d'après le programme des optimisations sont encore possibles, on peut aussi remarquer quelques problèmes dans le myls.
+
+
+\chapter{Compte-rendus personnels}
+\section{Anthony GRIFFON}
+
+A travers le projet, on a pu découvrir de nouvelles utilisation du C. Un projet tel que le terminal est pratique car on peut observer le programme tel qu'il devrait être et essayer de construire notre propre version. Il s'agit surtout de reproduction, mais cela permet de se poser pas mal de questions.
+\newline
+\newline
+On remarque aussi toute l'importance de la conception initiale d'un projet. Il ne faut pas trop rapidement passer au code ou on peut se retrouver confronté à des problèmes difficiles à résoudre.
+\newline
+\newline
+Dans notre cas, nous avons pensé tardivement à la possibilité de grouper des commandes avec les parenthèses et la gestion de priorités. Il était trop tard pour tout changer mais cependant, cela nous a permis de nous rendre compte que notre conception initiale avait des lacunes.
+\newline
+
+\bigskip
+\starbreak
+\section{Eliot CHAUVINEAU}
+
+\bigskip
+\starbreak
+\section{Meriem EL QSIMI}
+
+\bigskip
+\starbreak
+\section{Axel JUGUET}
+
+\bigskip
+\starbreak
+\newpage
+
+\begin{thebibliography}{9}
+\bibitem{larsmadsen} Lars Madsen, \emph{Various chapter styles for the memoir class}, 2011.
+\bibitem{memman} Peter Wilson, \emph{The Memoir Class for Configurable
+  Typesetting -- User Guide}, 2010.
+\bibitem{ens} Basé sur un polycopié de Roberto Di Cosmo, Xavier Leroy et Damien Doligez. \emph{Entrée, sortie, redirection}. 
+  \url{http://www.tuteurs.ens.fr/unix/shell/entreesortie.html}. 
+  \bibitem{makepp} \emph{Various statements in a makefile}. 
+  \url{ http://makepp.sourceforge.net/1.19/makepp_statements.html}. 
+\bibitem{preproc} \emph{Options Controlling the Preprocessor}. 
+  \url{http://gcc.gnu.org/onlinedocs/gcc-4.4.1/gcc/Preprocessor-Options.html}. 
+\bibitem{stackoverflow} Stackoverflow. \emph{Various topics}. 
+  \url{http://stackoverflow.com}.
+  
+\end{thebibliography}
+
+
+\end{document}

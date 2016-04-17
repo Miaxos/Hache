@@ -12,6 +12,38 @@
 #define BUFFSIZE 4096
 #define CP 0644
 
+int executecp(int argc, char*argv[]);
+int cd(char *pth);
+
+#ifdef DYN
+typedef struct SCmd SCmd;
+typedef int (*pfunc)(int, char *[]);
+
+struct SCmd
+{
+    char name[20];
+    char *nom;
+    pfunc pf;
+};
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]));
+SCmd* Init(SCmd* s);
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]))
+{
+    scmd->nom = scmd->name;
+    strcpy(scmd->nom, nom);
+    scmd->pf = pf;
+
+    return scmd;
+}
+
+SCmd* Init(SCmd* s){
+    s = ModCmd(s, "mycp", &executecp);
+    return s;
+}
+#endif
+
 static void call_getcwd ()
 {
     char * cwd;
@@ -25,7 +57,7 @@ static void call_getcwd ()
         free (cwd);
     }
 }
-
+#ifdef EXEC
 int cd(char *pth){
     char path[BUFFSIZE];
     strcpy(path,pth);
@@ -42,6 +74,7 @@ int cd(char *pth){
     }
     return 0;
 }
+#endif
 
 void createSubDir(char *dest){
         char * pch,*pcd;
@@ -121,8 +154,7 @@ int copyf(char *src, char *dest){
         }
 
     if(nread == -1){
-        printf("Error : enable to read data from %s
-:%s\n",src,strerror(errno));
+        printf("Error : enable to read data from %s:%s\n",src,strerror(errno));
         exit(1);
     }
     if(close(srcFD) == -1){
@@ -131,8 +163,7 @@ int copyf(char *src, char *dest){
     }
 
     if(close(destFD) == -1){
-        printf("Error : enable to close files %s
-:%s\n",dest,strerror(errno));
+        printf("Error : enable to close files %s:%s\n",dest,strerror(errno));
         exit(1);
     }
 
@@ -185,7 +216,9 @@ int copyd(char *src, char *dest){
     }
 }
 
-int main(int argc, char *argv[]){
+
+int executecp(int argc, char*argv[])
+{
     if( argc < 3){
         printf("Usage : %s source destination\n", argv[0]);
         exit(1);
@@ -218,4 +251,10 @@ int main(int argc, char *argv[]){
             exit(1);
         }
     }
+    return 0;
 }
+#ifdef EXEC
+int main(int argc, char *argv[]){
+    return executecp(argc, argv);
+}
+#endif

@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <fcntl.h>
-
+#include <dlfcn.h>
 #include <pthread.h>
 
 #ifdef __linux__
@@ -24,17 +24,16 @@
 #include "../inc/functions.h"
 #include "../inc/socket.h"
 
-#ifdef EXEC
-
-#else
+#ifdef LIB
 int executepwd(int argc, char *argv[]);
 int executels(int argc, char *argv[]);
 int executedu(int argc, char *argv[]);
 int executemkdir(int argc, char *argv[]);
+int executecp(int argc, char*argv[]);
 #endif
 
 
-#define TAILLE_MAX 256
+#define TAILLE_MAX 1024
 
 typedef int (*pfunc)(int, char *[]);
 
@@ -71,6 +70,11 @@ pfunc GetFunction(SCmd* scmd){
 	return scmd->pf;
 }
 
+int clear(int argc, char *argv[]);
+int clear(int argc, char *argv[]){
+	printf("\033c");
+	return 0;
+}
 
 int main() {
 	/*
@@ -91,25 +95,62 @@ int main() {
 	// A ajouter dans le makefile.
 	if (workingdirlib == NULL)
 	{
-		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
+		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.\n");
 	}
 	chdir("bin");
+	#ifdef DYN
+	void *lib[5];
+	char *listelib[5];
+	listelib[0] = "libmypwddyn.so";
+	listelib[1] = "libmylsdyn.so";
+	listelib[2] = "libmydudyn.so";
+	listelib[3] = "libmymkdirdyn.so";
+	listelib[4] = "libmycpdyn.so";
+	#endif
+
 	SCmd* listeFonctions[TAILLE_MAX];
 	for (i=0 ; i<TAILLE_MAX; i++) {
 		listeFonctions[i] = AddCmd();
-		#ifdef EXEC
-
-		#else
-		ModCmd(listeFonctions[i], "mypwd", &executepwd);
+		
+		#ifdef LIB
+		ModCmd(listeFonctions[i], "blblblbl", &clear);
+		#endif
+		#ifdef DYN
+		ModCmd(listeFonctions[i], "blblblbl", &clear);
 		#endif
 	}
-#ifdef EXEC
-
-#else
+#ifdef LIB
 	listeFonctions[0] = ModCmd(listeFonctions[0], "mypwd", &executepwd);
 	listeFonctions[1] = ModCmd(listeFonctions[1], "myls", &executels);
 	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
 	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
+	listeFonctions[4] = ModCmd(listeFonctions[4], "mycp", &executecp);
+
+#endif
+
+#ifdef DYN
+
+	typedef SCmd* (*pfInit)(SCmd* s);
+
+	pfInit Init;
+	i = 0;
+	while (i < 5) {
+		if ((lib[i] = dlopen(listelib[i], RTLD_LAZY)) == NULL) {
+			printf("libintrouvable\n");
+			return 1; //erreur, lib introuvable
+		}
+		if ((Init = (pfInit) dlsym(lib[i], "Init")) == NULL) {
+			printf("Pb\n");
+			return 1; //erreur, fonction introuvable
+		}
+		listeFonctions[i] = Init(listeFonctions[i]);
+		i++;
+	}
+	i = 0;
+
+
+
+
 #endif
 	//listeFonctions[1] = AddCmd("myls", &executels);
 	//listeFonctions[2] = AddCmd("mymkdir", &executemkdir);
@@ -136,18 +177,22 @@ int main() {
 			perror("Erreur dans \'ouverture du socket.");
 			exit(1);
 		}
-		srand(time(NULL)); // Seed pour le port pseudo-aléatoire.
-		port = (rand()%10000)+10000; // Entre 10000 - 20000
+		//srand(time(NULL)); // Seed pour le port pseudo-aléatoire.
+		//port = (rand()%10000)+10000; // Entre 10000 - 20000
+		port = 10000;
 		server.sin_family = AF_INET;
 		server.sin_addr.s_addr = INADDR_ANY;
 		server.sin_port = htons(port);
-
+		int check = 0;
 		// Bind de l'adresse
-		if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
-			perror("Erreur echec du bind:");
-			exit(1);
+		while(check == 0) {
+			check = 1;
+			if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
+				port++;
+				server.sin_port = htons(port);
+				check = 0;
+			}
 		}
-		
 		// Mode écoute (second argument: la queue).
 		listen(my_socket,5);
 		clilen = sizeof(struct sockaddr_in);
@@ -181,8 +226,10 @@ int main() {
 			}
 			i = 0;
 			getcwd(workingdir, 1024); // On récupère le répertoire de travail.
-			printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
-			fflush(stdout);
+			if (child != 0) {
+				printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
+				fflush(stdout);
+			}
 			if(child == 0) {
 				// Si on est dans le fils, alors on va attendre que quelqu'un se connecte.
 				new_socket = accept(my_socket, (struct sockaddr *)&client, (socklen_t*)&clilen);
@@ -254,8 +301,9 @@ int main() {
 			// Cependant ils auront tous le même environnement de travail.
 			// Si un change de dossier avec un cd, cela affectera l'ensemble des utilisateurs connectés à distance.
 
-			shutdown(new_socket, 0);
 			fflush(stdout);
+
+			shutdown(new_socket, 0);
 			listen(my_socket,5);
 			clearerr(stdout);
 			clearerr(stderr);
@@ -466,7 +514,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 									printf("Erreur dans la reception des données:\n");
 									break;
 								}
-								shutdown(sockfd,0); // ~= close(sockfd)
+								shutdown(sockfd,1); // ~= close(sockfd)
 								break;
 							}
 							n = write(sockfd, buffer, strlen(buffer));
