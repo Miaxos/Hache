@@ -30,6 +30,7 @@ int executels(int argc, char *argv[]);
 int executedu(int argc, char *argv[]);
 int executemkdir(int argc, char *argv[]);
 int executecp(int argc, char*argv[]);
+int executemv(int argc, char*argv[]);
 #endif
 
 
@@ -97,15 +98,20 @@ int main() {
 	{
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.\n");
 	}
+	else
+	{
+		printf("Hache - 1.0a\n");
+	}
 	chdir("bin");
 	#ifdef DYN
-	void *lib[5];
-	char *listelib[5];
+	void *lib[6];
+	char *listelib[6];
 	listelib[0] = "libmypwddyn.so";
 	listelib[1] = "libmylsdyn.so";
 	listelib[2] = "libmydudyn.so";
 	listelib[3] = "libmymkdirdyn.so";
 	listelib[4] = "libmycpdyn.so";
+	listelib[5] = "libmymvdyn.so";
 	#endif
 
 	SCmd* listeFonctions[TAILLE_MAX];
@@ -125,6 +131,7 @@ int main() {
 	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
 	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
 	listeFonctions[4] = ModCmd(listeFonctions[4], "mycp", &executecp);
+	listeFonctions[5] = ModCmd(listeFonctions[5], "mymv", &executemv);
 
 #endif
 
@@ -134,7 +141,7 @@ int main() {
 
 	pfInit Init;
 	i = 0;
-	while (i < 5) {
+	while (i < 6) {
 		if ((lib[i] = dlopen(listelib[i], RTLD_LAZY)) == NULL) {
 			printf("libintrouvable\n");
 			return 1; //erreur, lib introuvable

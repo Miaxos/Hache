@@ -14,13 +14,13 @@ DYNFLAG=-DDYN
 hello: 
 	@echo "\033[31;01m\t✕ make <all | all-lib | all-lib-dyn | cmd>"
 
-all: clean proper init myls mydu mypwd mymkdir mycp test
+all: clean proper init myls mydu mypwd mymkdir mycp mymv test
 
-all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat mycp-lib-stat test-lib
+all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat mycp-lib-stat mymv-lib-stat test-lib
 
-all-lib-dyn: clean proper init myls-lib-dyn mydu-lib-dyn mypwd-lib-dyn mymkdir-lib-dyn mycp-lib-dyn test-dyn
+all-lib-dyn: clean proper init myls-lib-dyn mydu-lib-dyn mypwd-lib-dyn mymkdir-lib-dyn mycp-lib-dyn mymv-lib-dyn test-dyn
 
-cmd: clean proper init myls mydu mypwd mymkdir mycp
+cmd: clean proper init myls mydu mypwd mymkdir mycp mymv
 
 init:
 	@mkdir -p build	
@@ -42,6 +42,24 @@ mypwd:
 	gcc $(CFLAGS) -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
 	gcc $(CFLAGS) -o ./commands/mypwd ./build/mypwd.o
 	@echo "\033[33;32m\t✓ Mypwd: done."
+	@echo "\033[33;00m"
+
+mymv-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/mymv.o ./commands/mymv.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmymvdyn.so ./build/mymv.o
+	@echo "\033[33;32m\t✓ Mymv-lib-dyn: done."
+	@echo "\033[33;00m"
+
+mymv-lib-stat:
+	gcc $(LIBFLAG) -Wall -c -o ./build/mymv.o ./commands/mymv.c
+	@echo "\033[33;32m\t✓ Mymv-lib-stat: done."
+	@echo "\033[33;00m"
+	@ar crv ./lib/libmymv.a build/mymv.o
+
+mymv:
+	gcc $(CFLAGS) -Wall -c -o ./build/mymv.o ./commands/mymv.c
+	gcc $(CFLAGS) -o ./commands/mymv ./build/mymv.o
+	@echo "\033[33;32m\t✓ Mymv: done."
 	@echo "\033[33;00m"
 
 mycp-lib-dyn:
@@ -124,7 +142,7 @@ test-dyn: main-dyn.o getInput.o functions-lib.o
 
 
 test-lib: main-lib.o getInput-lib.o functions-lib.o
-	gcc $(LIBFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls -lmydu -lmymkdir -lmycp
+	gcc $(LIBFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls -lmydu -lmymkdir -lmycp -lmymv
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m"
 	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE STATIQUE\t\t\tDone"
