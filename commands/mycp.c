@@ -9,7 +9,7 @@
 #include <sys/types.h>
 
 
-#define BUFFSIZE 1024
+#define BUFFSIZE 4096
 #define CP 0644
 
 static void call_getcwd ()
@@ -17,12 +17,12 @@ static void call_getcwd ()
     char * cwd;
     cwd = getcwd (0, 0);
     if (! cwd) {
-	fprintf (stderr, "getcwd failed: %s\n", strerror (errno));
+        fprintf (stderr, "getcwd failed: %s\n", strerror (errno));
     } else {
-	printf ("%s\n", cwd);
+        printf ("%s\n", cwd);
 
-	printf ("\n");
-	free (cwd);
+        printf ("\n");
+        free (cwd);
     }
 }
 
@@ -40,83 +40,36 @@ int cd(char *pth){
     }else{
         chdir(pth);
     }
-
     return 0;
 }
 
+void createSubDir(char *dest){
+        char * pch,*pcd;
+    int i=0,j;
+    char *tmpdest= (char *) malloc(100);
+        strcpy(tmpdest,dest);
 
-int copyf(char *src, char *dest){
-
-    char * pch;
-	char * pcs;
-    printf("in funct copyf");
-	call_getcwd();
-    int srcFD, destFD, nread, nwrite;
-    srcFD = open(src, O_RDONLY );
-    char buffer[BUFFSIZE];
-
-	char *tmpdest= (char *) malloc(100);
-	char *quotPtr;
-	int i=0;
-	strcpy(tmpdest,dest);
-	pcs = strtok(tmpdest,"/");
-	while(pcs != NULL){
-		i++;
-        pcs = strtok(NULL,"/");
-	}
-	printf(" i = %d",i);
-	printf("\ndest is %s\n", dest);
-	quotPtr= strchr(dest, '/');
-	if(quotPtr == NULL)
-	{
-	}
-	else if (i > 2){
-	pch = strtok(dest,"/");
-       while(pch != NULL){
-			if(i > 2){
-			(mkdir(pch,0777));
-            chdir(pch);
-			call_getcwd();
-			printf("%s !!!!!!!!!\n",dest);
-            pch = strtok(NULL,"/");
-
-			i--;
-			}
-
-         }
-	}
-
-    if(srcFD == -1){
-        printf("Error, cannot open src %s : %s\n",src, strerror(errno));
-        exit(1);
+    pcd = strtok(dest,"/");
+        while(pcd != NULL){
+        i++;
+        pcd = strtok(NULL,"/");
     }
-    destFD = open(dest, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR |
-S_IRGRP | S_IWGRP |S_IROTH | S_IWOTH);
-	if(destFD = creat(dest,CP) == -1){
+        int tmp_i = i;
 
-        printf("Error, cannot jjjcreate %s : %s\n", dest,strerror(errno));
-        exit(1);
-	}
-    while((nread = read(srcFD,buffer, BUFFSIZE)) > 0){
-        if(write(destFD,buffer,nread) != nread){
-            printf("\n Error : enable to write data to %s\n", dest);
-			exit(1);
+    pch = strtok(tmpdest,"/");
+    while(pch != NULL){
+        if(i == 1) break;
+        (mkdir(pch,0777));
+        chdir(pch);
+        pch = strtok(NULL,"/");
+        i--;
+    }
+
+        for(j=0;j<tmp_i-1;j++){
+                chdir("..");
         }
-    }
-	printf(" nread %d\n",nread);
-    if(nread == -1){
-        printf("Error : enable to read data from %s :%s\n ",src,strerror(errno));
-		exit(1);
-    }
-    if(close(srcFD) == -1){
-        printf("Error : enable to close files %s : %s\n",src,strerror(errno));
-		exit(1);
-    }
-
-
-    return 1;
+        free(tmpdest);
 }
-
 
 int is_regular_file(char *path)
 {
@@ -125,20 +78,81 @@ int is_regular_file(char *path)
     return S_ISREG(path_stat.st_mode);
 }
 
+int copyf(char *src, char *dest){
+        char * pcd,*pcs,*chr;
+    int srcFD, destFD, nread, nwrite;
+
+        char *cwd = strcat(getcwd(0,0),"/");
+    char *dirv = strcat(cwd,src);
+        if(!is_regular_file(src)){
+        chdir("..");
+        }
+        printf("\nsrc : %s\n",src);
+
+    srcFD = open(src, O_RDONLY);
+    char buffer[BUFFSIZE];
+    char *tmpdest= (char *) malloc(100);
+    char *tmpdest_= (char *) malloc(100);
+    char *quotPtr;
+        strcpy(tmpdest_,dest);
+        strcpy(tmpdest,dest);
+
+        int i = 0;
+    pcd = strtok(tmpdest,"/");
+        while(pcd != NULL){
+        i++;
+        pcd = strtok(NULL,"/");
+    }
+
+        if(i>2) createSubDir(tmpdest_);
+    if(srcFD == -1){
+        printf("Error, cannot open %s : %s\n",src, strerror(errno));
+        exit(1);
+    }
+    destFD = open(dest, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+
+    if(destFD = creat(dest,CP) == -1){
+            printf("Error, cannot create %s : %s\n", dest,strerror(errno));
+               exit(1);
+    }
+        while((nread = read(srcFD, buffer, BUFFSIZE)) > 0)
+        {
+                 write(destFD, buffer, nread);
+        }
+
+    if(nread == -1){
+        printf("Error : enable to read data from %s
+:%s\n",src,strerror(errno));
+        exit(1);
+    }
+    if(close(srcFD) == -1){
+        printf("Error : enable to close files %s :%s\n",src,strerror(errno));
+        exit(1);
+    }
+
+    if(close(destFD) == -1){
+        printf("Error : enable to close files %s
+:%s\n",dest,strerror(errno));
+        exit(1);
+    }
+
+        free(tmpdest);
+        free(tmpdest_);
+    return 1;
+}
+
+
+
 
 int copyd(char *src, char *dest){
     DIR *dirpt = NULL;
     struct dirent *dirp;
-	   char tmpdst[strlen(dest)+1];
+    char tmpdst[strlen(dest)+1];
     char tmpsrc[strlen(src)+1];
     strcat(dest, "/");
     strcat(src, "/");
     strcpy(tmpdst, dest);
     strcpy(tmpsrc, src);
-    printf("in funct copyd\n");
-
-	printf("dest : %s\n", dest);
-		call_getcwd();
     struct stat file_stat;
 
     if((dirpt = opendir(src)) == NULL){
@@ -146,27 +160,25 @@ int copyd(char *src, char *dest){
         return 0;
     }
     else{
-	char *filename;
-	 while( (dirp = readdir(dirpt)))
-	                                                                                                                                                                 {
-		chdir(src);
-		//call_getcwd();
-		if(stat(dirp->d_name,&file_stat) == -1){
-			printf("%s ",dirp->d_name);
-               perror("stat");
-               exit(EXIT_FAILURE);
-		}
-	      if(is_regular_file(dirp->d_name))
-	      {
 
-          strcat(tmpdst, dirp->d_name);
-          strcat(tmpsrc, dirp->d_name);
-		chdir("..");
-
-          copyf(tmpsrc, tmpdst);
-          strcpy(tmpdst, dest);
-          strcpy(tmpsrc, src);
-	      }
+    char * pcs;
+    char *filename;
+         chdir(src);
+         while( (dirp = readdir(dirpt)))
+           {
+                  chdir(src);
+            if(stat(dirp->d_name,&file_stat) == -1){
+                perror("stat");
+                exit(EXIT_FAILURE);
+               }
+              if(is_regular_file(dirp->d_name))
+              {
+                 strcat(tmpdst, dirp->d_name);
+                 strcat(tmpsrc, dirp->d_name);
+                 copyf(tmpsrc, tmpdst);
+                 strcpy(tmpdst, dest);
+                 strcpy(tmpsrc, src);
+              }
       }
         closedir(dirpt);
         return 1;
@@ -181,22 +193,20 @@ int main(int argc, char *argv[]){
     if(argc==3){
         char *source = argv[1];
         char *dest = argv[2];
-	int i;
+        int i;
         if(source[0] != '/' && dest[0] != '/'){
-			printf("Copying files\n ");
-            copyf(source, dest);
+                        call_getcwd();
+                        printf("copy simple files\n");
+                    copyf(source, dest);
         }else if(source[0] == '/' && dest[0] == '/'){
-			printf("Copying directories\n ");
             for(i =0; i<strlen(dest); i++){
                 dest[i] = dest[i+1];
             }
             for(i =0; i<strlen(source); i++){
                 source[i] = source[i+1];
             }
-			printf("src %s, dest %s\n", source, dest);
             copyd(source,dest);
         }else if(source[0] != '/' && dest[0] =='/'){
-			printf("Copying files\n ");
             for(i =0; i<strlen(dest); i++){
                 dest[i] = dest[i+1];
             }
