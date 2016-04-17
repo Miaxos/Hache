@@ -117,7 +117,7 @@ mymkdir-lib-dyn:
 	@echo "\033[33;00m"
 
 test-dyn: main-dyn.o getInput.o functions-lib.o
-	gcc $(DYNFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwddyn -lmylsdyn -lmydudyn -lmymkdirdyn -lmycpdyn
+	gcc $(DYNFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -ldl
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m"
 	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE DYNAMIQUE\t\t\tDone"
