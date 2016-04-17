@@ -38,55 +38,22 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 	- Prise en compte des opérateurs de redirection.
 	- Possibilité de se connecter en réseau avec une commande « connect » (Sorte de ssh).
 
+Pour toutes les fonctionnalités, consulter le fichier C.pdf situé dans Hache/tex/
+
 ### Commandes usuelles (MERIEM et AXEL)
 
-Placez vos commandes (.c) dans le répertoire "commands".<br />
-Ajoutez au makefile, pour chaque commande "mycommande.c" :<br />
+Codage des commandes de base que possède le shell Unix.
 
-_mycommande.o: ./commands/mymycommande.c<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc -c ./commands/mycomande.c -o ./build/mycommande.o -Wall_
+	- mkdir
+	- ls
+	- mv
+	- cp
+	- ...
 
-_mycommande: mycommande.o<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gcc -o ./commands/mycommande ./build/mycommande.o_
+Pour les commandes disponibles, consulter le fichier C.pdf situé dans Hache/tex/
 
-Il faut aussi rajouter la commande à la fin de la première ligne du makefile.<br />
-Il faut aussi bien sur l'ajouter dans la fonction isFunction de functions.c<br />
-Commandes à faire au minimum :
+### Mode d'emploi
 
-- help (qui affiche les commandes disponibles)
-- ls
-- cd
-- cp
-- mv
-- mkdir
-- clear (qui efface l'écran)
-
-## Construction du terminal
-
-L'arborescence du projet :
-
-	- /src/ contient les sources (.c) du shell
-	- /commands/ contient les sources (.c) des commandes [cp, cd, ls, man, ...]
-	- /inc/ contient les headers des sources de /src/
-	- /build/ contient les fichiers .o réalisés au make
-	- /bin/ contient l'executable
-
-## Mode d'emploi
-
-Pour compiler le programme :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make
-
-Pour supprimer les fichiers .o :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make clean
-
-Pour supprimer les fichiers .o et les executables : (PENSER A LE FAIRE AVANT UN COMMIT)<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer à la racine du projet<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) make proper	
-
-Pour lancer le programme :<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1) Se placer dans le répertoire /bin/<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2) ./test
+Consulter le fichier C.pdf situé dans Hache/tex/
 
 
