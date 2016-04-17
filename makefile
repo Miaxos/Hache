@@ -18,13 +18,19 @@ all: clean proper init myls mydu mypwd mymkdir mycp test
 
 all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat mycp-lib-stat test-lib
 
-all-lib-dyn: clean proper init 
+all-lib-dyn: clean proper init mypwd-lib-dyn myls-lib-dyn test-dyn
 
 cmd: clean proper init myls mydu mypwd mymkdir mycp
 
 init:
 	@mkdir -p build	
 	@mkdir -p lib
+
+mypwd-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/mypwd.o ./commands/mypwd.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmypwddyn.so ./build/mypwd.o
+	@echo "\033[33;32m\t✓ Mypwd-lib-dyn: done."
+	@echo "\033[33;00m"
 
 mypwd-lib-stat:
 	gcc $(LIBFLAG) -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
@@ -62,6 +68,11 @@ myls-lib-stat:
 	@echo "\033[33;00m"
 	@ar crv ./lib/libmyls.a build/myls.o
 
+myls-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/myls.o ./commands/myls.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmylsdyn.so ./build/myls.o
+	@echo "\033[33;32m\t✓ Myls-lib-dyn: done."
+	@echo "\033[33;00m"
 
 mydu:
 	gcc $(CFLAGS) -c ./commands/mydu.c -o ./build/mydu.o -w
@@ -87,6 +98,13 @@ mymkdir-lib-stat:
 	@echo "\033[33;00m"
 	@ar crv ./lib/libmymkdir.a build/mymkdir.o
 
+test-dyn: main-dyn.o getInput.o functions-lib.o
+	gcc $(DYNFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwddyn -lmylsdyn
+	@echo "\033[33;32m\t✓ Build: done."
+	@echo "\033[33;00m"
+	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE DYNAMIQUE\t\t\tDone"
+
+
 test-lib: main-lib.o getInput-lib.o functions-lib.o
 	gcc $(LIBFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwd -lmyls -lmydu -lmymkdir -lmycp
 	@echo "\033[33;32m\t✓ Build: done."
@@ -106,7 +124,12 @@ main.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
 
 main-lib.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
 	gcc $(LIBFLAG) -Wall -c ./src/main.c -o ./build/main.o
-	@echo "\033[33;32m\t✓ Build: main done."
+	@echo "\033[33;32m\t✓ Build: main-lib done."
+	@echo "\033[33;00m"
+
+main-dyn.o: ./src/main.c ./inc/getInput.h ./inc/functions.h
+	gcc $(DYNFLAG) -Wall -c ./src/main.c -o ./build/main.o
+	@echo "\033[33;32m\t✓ Build: main-dyn done."
 	@echo "\033[33;00m"
 
 getInput.o: ./src/getInput.c

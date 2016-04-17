@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <fcntl.h>
-
+#include <dlfcn.h>
 #include <pthread.h>
 
 #ifdef __linux__
@@ -99,7 +99,10 @@ int main() {
 	}
 	chdir("bin");
 	#ifdef DYN
+	void *lib[20];
 	char *listelib[20];
+	listelib[0] = "libmypwddyn.so";
+	listelib[1] = "libmylsdyn.so";
 	#endif
 
 	SCmd* listeFonctions[TAILLE_MAX];
@@ -116,6 +119,31 @@ int main() {
 	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
 	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
 	listeFonctions[4] = ModCmd(listeFonctions[4], "mycp", &executecp);
+
+#endif
+
+#ifdef DYN
+
+	typedef SCmd* (*pfInit)(SCmd* s);
+
+	pfInit Init;
+	i = 0;
+	while (i < 2) {
+		if ((lib[i] = dlopen(listelib[i], RTLD_LAZY)) == NULL) {
+			printf("libintrouvable\n");
+			return 1; //erreur, lib introuvable
+		}
+		if ((Init = (pfInit) dlsym(lib[i], "Init")) == NULL) {
+			printf("Pb\n");
+			return 1; //erreur, fonction introuvable
+		}
+		listeFonctions[i] = Init(listeFonctions[i]);
+		i++;
+	}
+	i = 0;
+
+
+
 
 #endif
 	//listeFonctions[1] = AddCmd("myls", &executels);
