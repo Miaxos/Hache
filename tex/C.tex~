@@ -456,7 +456,6 @@ Pour connecter la sortie d'une commande sur l'entrée dune autre, avec les redire
 Cette manipulation peut s'écrire en une ligne avec le pipe "|".
 \newline
 Pour l'instant, notre shell ne supporte qu'une seule redirection par commande saisie. Ainsi, ls test | grep test2 > test3 ne fonctionnera pas.
-\newline
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls -l | grep README.md
 -rwxr-xr-x   1 anthonygriffon  staff  3390  4 avr 11:53 README.md
