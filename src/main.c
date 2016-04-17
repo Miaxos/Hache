@@ -95,7 +95,7 @@ int main() {
 	// A ajouter dans le makefile.
 	if (workingdirlib == NULL)
 	{
-		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
+		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.\n");
 	}
 	chdir("bin");
 	#ifdef DYN
@@ -113,6 +113,9 @@ int main() {
 		listeFonctions[i] = AddCmd();
 		
 		#ifdef LIB
+		ModCmd(listeFonctions[i], "blblblbl", &clear);
+		#endif
+		#ifdef DYN
 		ModCmd(listeFonctions[i], "blblblbl", &clear);
 		#endif
 	}
@@ -174,16 +177,21 @@ int main() {
 			perror("Erreur dans \'ouverture du socket.");
 			exit(1);
 		}
-		srand(time(NULL)); // Seed pour le port pseudo-aléatoire.
-		port = (rand()%10000)+10000; // Entre 10000 - 20000
+		//srand(time(NULL)); // Seed pour le port pseudo-aléatoire.
+		//port = (rand()%10000)+10000; // Entre 10000 - 20000
+		port = 10000;
 		server.sin_family = AF_INET;
 		server.sin_addr.s_addr = INADDR_ANY;
 		server.sin_port = htons(port);
-
+		int check = 0;
 		// Bind de l'adresse
-		if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
-			perror("Erreur echec du bind:");
-			exit(1);
+		while(check == 0) {
+			check = 1;
+			if (bind(my_socket, (struct sockaddr *) &server, sizeof(server)) < 0) {
+				port++;
+				server.sin_port = htons(port);
+				check = 0;
+			}
 		}
 		
 		// Mode écoute (second argument: la queue).
