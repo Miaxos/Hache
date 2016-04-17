@@ -99,10 +99,13 @@ int main() {
 	}
 	chdir("bin");
 	#ifdef DYN
-	void *lib[20];
-	char *listelib[20];
+	void *lib[5];
+	char *listelib[5];
 	listelib[0] = "libmypwddyn.so";
 	listelib[1] = "libmylsdyn.so";
+	listelib[2] = "libmydudyn.so";
+	listelib[3] = "libmymkdirdyn.so";
+	listelib[4] = "libmycpdyn.so";
 	#endif
 
 	SCmd* listeFonctions[TAILLE_MAX];
@@ -128,7 +131,7 @@ int main() {
 
 	pfInit Init;
 	i = 0;
-	while (i < 2) {
+	while (i < 5) {
 		if ((lib[i] = dlopen(listelib[i], RTLD_LAZY)) == NULL) {
 			printf("libintrouvable\n");
 			return 1; //erreur, lib introuvable

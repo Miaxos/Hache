@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BUFFERSIZE 200
+int executemkdir(int argc, char *argv[]);
 
 int cd(char *pth){
     char path[BUFFERSIZE];
@@ -22,6 +24,35 @@ int cd(char *pth){
 
     return 0;
 }
+
+#ifdef DYN
+typedef struct SCmd SCmd;
+typedef int (*pfunc)(int, char *[]);
+
+struct SCmd
+{
+    char name[20];
+    char *nom;
+    pfunc pf;
+};
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]));
+SCmd* Init(SCmd* s);
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]))
+{
+    scmd->nom = scmd->name;
+    strcpy(scmd->nom, nom);
+    scmd->pf = pf;
+
+    return scmd;
+}
+
+SCmd* Init(SCmd* s){
+    s = ModCmd(s, "mymkdir", &executemkdir);
+    return s;
+}
+#endif
 
 int executemkdir(int argc, char *argv[])
 {

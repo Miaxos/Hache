@@ -18,6 +18,35 @@ int main(int argc,char *argv[])
 }
 #endif
 
+#ifdef DYN
+typedef struct SCmd SCmd;
+typedef int (*pfunc)(int, char *[]);
+
+struct SCmd
+{
+	char name[20];
+	char *nom;
+	pfunc pf;
+};
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]));
+SCmd* Init(SCmd* s);
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]))
+{
+	scmd->nom = scmd->name;
+	strcpy(scmd->nom, nom);
+	scmd->pf = pf;
+
+	return scmd;
+}
+
+SCmd* Init(SCmd* s){
+	s = ModCmd(s, "mydu", &executedu);
+	return s;
+}
+#endif
+
 int executedu(int argc, char *argv[])
 {
 	unsigned int size;

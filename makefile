@@ -18,7 +18,7 @@ all: clean proper init myls mydu mypwd mymkdir mycp test
 
 all-lib: clean proper init myls-lib-stat mydu-lib-stat mypwd-lib-stat mymkdir-lib-stat mycp-lib-stat test-lib
 
-all-lib-dyn: clean proper init mypwd-lib-dyn myls-lib-dyn test-dyn
+all-lib-dyn: clean proper init myls-lib-dyn mydu-lib-dyn mypwd-lib-dyn mymkdir-lib-dyn mycp-lib-dyn test-dyn
 
 cmd: clean proper init myls mydu mypwd mymkdir mycp
 
@@ -42,6 +42,12 @@ mypwd:
 	gcc $(CFLAGS) -Wall -c -o ./build/mypwd.o ./commands/mypwd.c
 	gcc $(CFLAGS) -o ./commands/mypwd ./build/mypwd.o
 	@echo "\033[33;32m\t✓ Mypwd: done."
+	@echo "\033[33;00m"
+
+mycp-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/mycp.o ./commands/mycp.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmycpdyn.so ./build/mycp.o
+	@echo "\033[33;32m\t✓ Mycp-lib-dyn: done."
 	@echo "\033[33;00m"
 
 mycp-lib-stat:
@@ -86,6 +92,12 @@ mydu-lib-stat:
 	@echo "\033[33;00m"
 	@ar crv ./lib/libmydu.a build/mydu.o
 
+mydu-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/mydu.o ./commands/mydu.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmydudyn.so ./build/mydu.o
+	@echo "\033[33;32m\t✓ Mydu-lib-dyn: done."
+	@echo "\033[33;00m"
+
 mymkdir:
 	gcc $(CFLAGS) -Wall -c ./commands/mymkdir.c -o ./build/mymkdir.o -w
 	gcc $(CFLAGS) -o ./commands/mymkdir ./build/mymkdir.o
@@ -98,8 +110,14 @@ mymkdir-lib-stat:
 	@echo "\033[33;00m"
 	@ar crv ./lib/libmymkdir.a build/mymkdir.o
 
+mymkdir-lib-dyn:
+	gcc $(DYNFLAG) -Wall -fPIC -c -o ./build/mymkdir.o ./commands/mymkdir.c
+	gcc $(DYNFLAG) -v -shared -o ./lib/libmymkdirdyn.so ./build/mymkdir.o
+	@echo "\033[33;32m\t✓ Mymkdir-lib-dyn: done."
+	@echo "\033[33;00m"
+
 test-dyn: main-dyn.o getInput.o functions-lib.o
-	gcc $(DYNFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwddyn -lmylsdyn
+	gcc $(DYNFLAG) -o ./bin/$(EXEC) ./build/main.o ./build/getInput.o ./build/functions.o -L./lib/ -lmypwddyn -lmylsdyn -lmydudyn -lmymkdirdyn -lmycpdyn
 	@echo "\033[33;32m\t✓ Build: done."
 	@echo "\033[33;00m"
 	@echo "\033[33;00m=== Compilation effectué en mode LIBRAIRIE DYNAMIQUE\t\t\tDone"
