@@ -427,18 +427,18 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 			else if (andmode == 3)
 			{
 				// Dans le cas d'une redirection |
-				if (isEndPipe == 0) {
+				if (pipemode == 0) {
 					fflush(stdout);
 					fgetpos(stdout, &pos);
 					fd = dup(fileno(stdout));
 					freopen("temp", "w+", stdout);
-					isEndPipe = 1;
+					pipemode = 1;
 				} else {
 					fflush(stdout);
 					fgetpos(stdout, &pos);
 					fd = dup(fileno(stdin));
 					freopen("temp", "r", stdin);
-					isEndPipe = 0;
+					pipemode = 0;
 				}
 			}
 
@@ -470,7 +470,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 			}
 			else if (andmode == 3)
 			{
-				if (isEndPipe == 0) {
+				if (pipemode == 0) {
 					fflush(stdin);
 					dup2(fd, fileno(stdin));
 		    			close(fd);
