@@ -222,7 +222,7 @@ Notre projet se trouve sur le Gitlab de l'Université de Nantes, à l'adresse: \
 \label{cha:first-use}
 
 \section{Compilation du programme}
-Avant d'être utilisé, le programme se doit d'être compilé. Une fois les sources obtenues, ce placer dans le terminal usuel, et exécuter:
+Avant d'être utilisé, le programme se doit d'être compilé. Une fois les sources obtenues, se placer dans le terminal usuel, et exécuter:
 
 \begin{Verbatim}
 bash4.2$> make
@@ -231,7 +231,7 @@ bash4.2$> make
 La compilation peut se faire de différente façons, nous allons voir toutes les options possibles au make.
 
 \subsection{Avertissement}
-Le terminal peut utiliser des librairies et fonctions non utilisé sous les systèmes WINDOWS©, le logiciel a été testé sous UBUNTU 14.04 et OS X 10.11.2.
+Le terminal peut utiliser des librairies et fonctions non utilisés sous les systèmes WINDOWS©, le logiciel a été testé sous UBUNTU 14.04 et OS X 10.11.2.
 \newline
 La compilation du programme nécessite la présence du compilateur GCC >= 4.8 ou CLANG >= 7.0.2.
 \newline
@@ -242,7 +242,7 @@ Le programme peut compiler sous d'autres versions de GCC ou CLANG, cependant, no
 En exécutant la commande "make all", le terminal ainsi que toutes les commandes attachées \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} seront générés en mode exécutable. L'exécutable du terminal sera alors enregistré dans le dossier "./bin/".
 
 \subsection{Make all-lib}
-En exécutant la commande "make all-lib", le terminal ainsi que toutes les commandes attacheés \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} seront générés en mode librairie statique. L'exécutable pourra être déplacer n'importe ou, on aura pas besoin d'indiquer au terminal où se trouvent les exécutables pour les exécuter.\newline
+En exécutant la commande "make all-lib", le terminal ainsi que toutes les commandes attachés \hyperref[cha:terminal-all-cmd]{(Voir chapitre lié)} seront générés en mode librairie statique. L'exécutable pourra être déplacé n'importe ou, on aura pas besoin d'indiquer au terminal où se trouvent les exécutables pour les exécuter.\newline
 On pourra cependant quand même l'indiquer pour ajouter des exécutables.
 
 \subsection{Make all-lib-dyn}
@@ -283,6 +283,12 @@ Ce script est à exécuter à l'aide de cette commande:
 bash4.2$> . ./define_variable.sh"
 \end{Verbatim}
 
+Ou bien avec
+
+\begin{Verbatim}[label={bash}]
+bash4.2$> source ./define_variable.sh"
+\end{Verbatim}
+
 \section{Démarrage du programme}
 
 Démarrons maintenant le programme, une fois la compilation terminé, l'exécutable du programme se trouve dans le dossier "bin".
@@ -292,7 +298,7 @@ bash4.2$> cd bin
 bash4.2$> ./hache
 \end{Verbatim}
 
-Une fois le programme lancé vous devriez avoir cet affichage\footnote{Le port du serveur est aléatoire entre 10000 et 20000.}:
+Une fois le programme lancé vous devriez avoir cet affichage\footnote{HACHE va prendre le premier port libre à partir de 10000.}:
 
 \begin{Verbatim}[label={Hache}]
 Serveur lancé sur le port: 10719.
@@ -304,7 +310,7 @@ Si jamais vous avez le message: "Les librairies personnels ne sont pas chargés,
 \newline
 On peut observer qu'un serveur se lance sur un port, pour plus d'information, il faut regarder la commande "connect".
 \newline
-Nous avons aussi le fil d'Arianne qui s'affiche avant d'entrer les commandes.
+Nous avons aussi le fil d'Ariane\footnote{Cela indique le dossier courant.} qui s'affiche avant d'entrer les commandes.
 
 \chapter{Commandes liées au terminal}
 \label{cha:terminal-all-cmd}
@@ -762,7 +768,7 @@ On peut observer à la sortie 3,246,795 bytes utilisé, et seulement 5,120 bytes
 \chapter{Compte-rendus personnels}
 \section{Anthony GRIFFON}
 
-A travers le projet, on a pu découvrir de nouvelles utilisation du C. Un projet tel que le terminal est pratique car on peut observer le programme tel qu'il devrait être et essayer de construire notre propre version. Il s'agit surtout de reproduction, mais cela permet de se poser pas mal de questions.
+A travers le projet, on a pu découvrir de nouvelles utilisations du C. Un projet tel que le terminal est pratique car on peut observer le programme tel qu'il devrait être et essayer de construire notre propre version. Il s'agit surtout de reproduction, mais cela permet de se poser pas mal de questions.
 \newline
 \newline
 On remarque aussi toute l'importance de la conception initiale d'un projet. Il ne faut pas trop rapidement passer au code ou on peut se retrouver confronté à des problèmes difficiles à résoudre.
