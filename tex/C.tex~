@@ -1,7 +1,7 @@
 \documentclass[11pt,a4paper]{memoir}
 
 \def\MyFileVersion{Version 0.1a, 2016/04/15}
-\setlrmarginsandblock{2.5cm}{*}{1} 
+\setlrmarginsandblock{2.5cm}{*}{1}
 \setulmarginsandblock{2.5cm}{2.5cm}{*}
 \setmarginnotes{2.5mm}{2cm}{1em}
 \checkandfixthelayout
@@ -93,7 +93,7 @@
     \addtostream{OutputStyle}{%
       \protect\STOPCODE%
     }
-  \else% 
+  \else%
     \addtostream{OutputStyle}{%
       \protect\chapterstyle{\CurrentChapterStyle}^^J%
       \protect\STOPCODE^^J%
@@ -203,7 +203,7 @@ A la fin du document, il y a un chapitre où chaque membre du projet fera un comp
 
 \bigskip
 
-Le projet HACHE, est découpé en deux parties, chaque partie comporte deux membres. La première équipe, chargé de s'occuper de la partie du terminal et de la mise en place de la compilation à l'aide de librairies statiques et dynamiques en lui même est composé de Anthony GRIFFON, et de Eliot CHAUVINEAU 
+Le projet HACHE, est découpé en deux parties, chaque partie comporte deux membres. La première équipe, chargé de s'occuper de la partie du terminal et de la mise en place de la compilation à l'aide de librairies statiques et dynamiques en lui même est composé de Anthony GRIFFON, et de Eliot CHAUVINEAU
 \newline
 \newline
 La seconde équipe, qui se charge des différentes commandes à exécuter, se compose de Meriem EL QSIMI et Axel JUGUET.
@@ -285,7 +285,7 @@ bash4.2$> . ./define_variable.sh"
 
 \section{Démarrage du programme}
 
-Démarrons maintenant le programme, une fois la compilation terminé, l'exécutable du programme se trouve dans le dossier "bin". 
+Démarrons maintenant le programme, une fois la compilation terminé, l'exécutable du programme se trouve dans le dossier "bin".
 
 \begin{Verbatim}[label={bash}]
 bash4.2$> cd bin
@@ -296,7 +296,7 @@ Une fois le programme lancé vous devriez avoir cet affichage\footnote{Le port du
 
 \begin{Verbatim}[label={Hache}]
 Serveur lancé sur le port: 10719.
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 Si jamais vous avez le message: "Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL." reportez vous à \hyperref[cha:section-variables]{cette section}.
@@ -330,7 +330,7 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/>
 Il s'agit d'une commande n'ayant pour objectif qu'une meilleure visibilité. Cette commande permet d'effacer toutes les commandes et tous les résultats entrés précédemment pour qu'il ne reste plus qu'une ligne sur le terminal.
 \newline
 \begin{Verbatim}[label={Hache}]
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Quitter le terminal (exit)}
@@ -367,7 +367,7 @@ Le principe de connection au serveur est différent des protocoles normaux, lorsq
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
-prompt-dp$> 
+prompt-dp$>
 \end{Verbatim}
 
 Pour envoyer une requête au serveur, il ne vous reste qu'à taper la commande et appuyer sur entrée.
@@ -376,7 +376,7 @@ Pour envoyer une requête au serveur, il ne vous reste qu'à taper la commande et 
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
 prompt-dp$> echo hey
 hey
-prompt-dp$> 
+prompt-dp$>
 \end{Verbatim}
 
 \subsection{Multi-utilisateurs}
@@ -456,10 +456,11 @@ Pour connecter la sortie d'une commande sur l'entrée dune autre, avec les redire
 Cette manipulation peut s'écrire en une ligne avec le pipe "|".
 \newline
 Pour l'instant, notre shell ne supporte qu'une seule redirection par commande saisie. Ainsi, ls test | grep test2 > test3 ne fonctionnera pas.
+\newline
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls -l | grep README.md
 -rwxr-xr-x   1 anthonygriffon  staff  3390  4 avr 11:53 README.md
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Les opérateurs logiques}
@@ -488,7 +489,7 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> pwd && pwd && echo 1 && ls l
 /Users/anthonygriffon/Desktop/Hache/bin
 1
 ls: ldezkdj: No such file or directory
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \subsection{L'opérateur OU}
@@ -498,7 +499,7 @@ L'opérateur "OU" est symbolisé par "||" dans HACHE.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls || pwd
 \end{Verbatim}
 
-Ici la commande ls s'exécute avec succès, de ce fait la commande pwd ne s'exécutera pas. 
+Ici la commande ls s'exécute avec succès, de ce fait la commande pwd ne s'exécutera pas.
 Quelques exemples:
 
 \begin{Verbatim}[label={Hache}]
@@ -509,7 +510,7 @@ ls: dzkejdhzkl: No such file or directory
 /Users/anthonygriffon/Desktop/Hache/bin
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> pwd || pwd || echo 1 || ls ldezkdj
 /Users/anthonygriffon/Desktop/Hache/bin
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Les taches de fonds}
@@ -526,7 +527,7 @@ Ici, les commandes vont s'exécuter dans un terminal HACHE avec pour PID 22233. C
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
 [1] 22233
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 drwxr-xr-x 6 anthonygriffon staff      204 2016-04-16 21:49 .
 drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
 -rw-r--r-- 1 anthonygriffon staff     6148 2016-04-16 19:26 .DS_Store
@@ -534,7 +535,7 @@ drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
 -rwxr-xr-x 1 anthonygriffon staff    29120 2016-04-16 21:49 Hache
 drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 21:04 Hache.dSYM
 
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 
 \end{Verbatim}
 
@@ -551,7 +552,7 @@ drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
 -rw-r--r-- 1 anthonygriffon staff       15 2016-04-16 21:24 file.txt
 -rwxr-xr-x 1 anthonygriffon staff    29120 2016-04-16 21:49 Hache
 drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 21:04 Hache.dSYM
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Copier les fichiers (mycp)}
@@ -560,7 +561,7 @@ La commande mycp permet de copier un fichier.
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache> mycp
 Usage : mycp source destination
-prompt1.0: /Users/anthonygriffon/Desktop/Hache> 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache>
 \end{Verbatim}
 
 \section{Bouger les fichiers (mymv)}
@@ -580,7 +581,7 @@ Affiche le nombre d'octets occupés dans le répertoire courant.
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop> mydu
 Taille : 877091682
-prompt1.0: /Users/anthonygriffon/Desktop> 
+prompt1.0: /Users/anthonygriffon/Desktop>
 \end{Verbatim}
 
 \chapter{Analyse du code}
@@ -649,11 +650,11 @@ Voici un rapport valgrind de HACHE après une utilisation de quelques commandes p
 ==22326== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
 ==22326== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
 ==22326== Command: ./Hache
-==22326== 
-Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des 
+==22326==
+Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des
 executablesdans la variable d'environnement PTERMINAL.
-prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> Les librairies personnels ne sont pas 
-chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement 
+prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> Les librairies personnels ne sont pas
+chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement
 PTERMINAL
 Serveur lancé sur le port: 19015.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> myls
@@ -670,11 +671,11 @@ drwxr-xr-x 14 anthonygriffon staff      476 2016-04-16 22:10 ..
 drwxr-xr-x 3 anthonygriffon staff      102 2016-04-16 22:39 Hache.dSYM
 drwxr-xr-x 2 anthonygriffon staff       68 2016-04-16 22:43 Hey
 -rw-r--r-- 1 anthonygriffon staff      959 2016-04-16 22:45 log.txt
-==22328== 
+==22328==
 ==22328== HEAP SUMMARY:
 ==22328==     in use at exit: 3,270,931 bytes in 4,359 blocks
 ==22328==   total heap usage: 4,579 allocs, 220 frees, 3,290,809 bytes allocated
-==22328== 
+==22328==
 ==22328== LEAK SUMMARY:
 ==22328==    definitely lost: 1,344 bytes in 8 blocks
 ==22328==    indirectly lost: 4,200 bytes in 8 blocks
@@ -682,16 +683,16 @@ drwxr-xr-x 2 anthonygriffon staff       68 2016-04-16 22:43 Hey
 ==22328==    still reachable: 3,233,829 bytes in 4,149 blocks
 ==22328==         suppressed: 31,558 bytes in 194 blocks
 ==22328== Rerun with --leak-check=full to see details of leaked memory
-==22328== 
+==22328==
 ==22328== For counts of detected and suppressed errors, rerun with: -v
 ==22328== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mykdir blbl
 Erreur : No such file or directory
-==22329== 
+==22329==
 ==22329== HEAP SUMMARY:
 ==22329==     in use at exit: 3,253,094 bytes in 4,300 blocks
 ==22329==   total heap usage: 7,458 allocs, 3,158 frees, 6,429,622 bytes allocated
-==22329== 
+==22329==
 ==22329== LEAK SUMMARY:
 ==22329==    definitely lost: 2,080 bytes in 4 blocks
 ==22329==    indirectly lost: 4,096 bytes in 2 blocks
@@ -699,16 +700,16 @@ Erreur : No such file or directory
 ==22329==    still reachable: 3,215,360 bytes in 4,100 blocks
 ==22329==         suppressed: 31,558 bytes in 194 blocks
 ==22329== Rerun with --leak-check=full to see details of leaked memory
-==22329== 
+==22329==
 ==22329== For counts of detected and suppressed errors, rerun with: -v
 ==22329== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mydu
 Taille : 52756
-==22330== 
+==22330==
 ==22330== HEAP SUMMARY:
 ==22330==     in use at exit: 3,254,118 bytes in 4,301 blocks
 ==22330==   total heap usage: 10,552 allocs, 6,251 frees, 9,626,726 bytes allocated
-==22330== 
+==22330==
 ==22330== LEAK SUMMARY:
 ==22330==    definitely lost: 3,104 bytes in 5 blocks
 ==22330==    indirectly lost: 4,096 bytes in 2 blocks
@@ -716,16 +717,16 @@ Taille : 52756
 ==22330==    still reachable: 3,215,360 bytes in 4,100 blocks
 ==22330==         suppressed: 31,558 bytes in 194 blocks
 ==22330== Rerun with --leak-check=full to see details of leaked memory
-==22330== 
+==22330==
 ==22330== For counts of detected and suppressed errors, rerun with: -v
 ==22330== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mypwd
 /Users/anthonygriffon/Desktop/Hache/bin
-==22331== 
+==22331==
 ==22331== HEAP SUMMARY:
 ==22331==     in use at exit: 3,255,142 bytes in 4,302 blocks
 ==22331==   total heap usage: 13,610 allocs, 9,308 frees, 12,772,278 bytes allocated
-==22331== 
+==22331==
 ==22331== LEAK SUMMARY:
 ==22331==    definitely lost: 4,128 bytes in 6 blocks
 ==22331==    indirectly lost: 4,096 bytes in 2 blocks
@@ -733,16 +734,16 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> mypwd
 ==22331==    still reachable: 3,215,360 bytes in 4,100 blocks
 ==22331==         suppressed: 31,558 bytes in 194 blocks
 ==22331== Rerun with --leak-check=full to see details of leaked memory
-==22331== 
+==22331==
 ==22331== For counts of detected and suppressed errors, rerun with: -v
 ==22331== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> exit
 Au revoir !
-==22326== 
+==22326==
 ==22326== HEAP SUMMARY:
 ==22326==     in use at exit: 3,246,795 bytes in 4,292 blocks
 ==22326==   total heap usage: 16,675 allocs, 12,383 frees, 15,934,235 bytes allocated
-==22326== 
+==22326==
 ==22326== LEAK SUMMARY:
 ==22326==    definitely lost: 5,120 bytes in 5 blocks
 ==22326==    indirectly lost: 0 bytes in 0 blocks
@@ -750,7 +751,7 @@ Au revoir !
 ==22326==    still reachable: 3,215,360 bytes in 4,100 blocks
 ==22326==         suppressed: 26,315 bytes in 187 blocks
 ==22326== Rerun with --leak-check=full to see details of leaked memory
-==22326== 
+==22326==
 ==22326== For counts of detected and suppressed errors, rerun with: -v
 ==22326== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 \end{Verbatim}
@@ -774,10 +775,21 @@ Dans notre cas, nous avons pensé tardivement à la possibilité de grouper des com
 \starbreak
 \section{Eliot CHAUVINEAU}
 
+Ce projet mélange habilement toutes les notions de programmation/système que nous avons apprises durant nos cours de C/système. C'est un bon exercice de programmation mais aussi et surtout de conception, et d'organisation en équipe. On ne peut pas se lancer dans le code tête baissée sans avoir réfléchi en groupe à la conception du programme.
+\newline
+Malheureusement nous n'avons pas pu implémenter toutes les fonctions que nous voulions apporter à notre shell. Nous n'avons pas pris assez de temps à réfléchir ensemble à sa conceptions avant de commencer à programmer. Les problèmes sont arrivés à la fin, et il était trop tard pour changer la conception de notre shell.
+\newline
+
 \bigskip
 \starbreak
 \section{Meriem EL QSIMI}
-
+Le projet s'est révélé très enrichissant, il nous a permis de découvrir comment fonctionnent les commandes linux.
+\newline
+\newline
+De plus, il nous a permis d'appliquer nos connaissances en langage C.
+\newline
+\newline
+Les principaux problèmes, que nous avons rencontrés, concernaient la conception initiale du projet, nous avons directement commencé le code. Ainsi, j'ai eu au début quelques problèmes en utilisant le git sous windows.
 \bigskip
 \starbreak
 \section{Axel JUGUET}
@@ -790,15 +802,15 @@ Dans notre cas, nous avons pensé tardivement à la possibilité de grouper des com
 \bibitem{larsmadsen} Lars Madsen, \emph{Various chapter styles for the memoir class}, 2011.
 \bibitem{memman} Peter Wilson, \emph{The Memoir Class for Configurable
   Typesetting -- User Guide}, 2010.
-\bibitem{ens} Basé sur un polycopié de Roberto Di Cosmo, Xavier Leroy et Damien Doligez. \emph{Entrée, sortie, redirection}. 
-  \url{http://www.tuteurs.ens.fr/unix/shell/entreesortie.html}. 
-  \bibitem{makepp} \emph{Various statements in a makefile}. 
-  \url{ http://makepp.sourceforge.net/1.19/makepp_statements.html}. 
-\bibitem{preproc} \emph{Options Controlling the Preprocessor}. 
-  \url{http://gcc.gnu.org/onlinedocs/gcc-4.4.1/gcc/Preprocessor-Options.html}. 
-\bibitem{stackoverflow} Stackoverflow. \emph{Various topics}. 
+\bibitem{ens} Basé sur un polycopié de Roberto Di Cosmo, Xavier Leroy et Damien Doligez. \emph{Entrée, sortie, redirection}.
+  \url{http://www.tuteurs.ens.fr/unix/shell/entreesortie.html}.
+  \bibitem{makepp} \emph{Various statements in a makefile}.
+  \url{ http://makepp.sourceforge.net/1.19/makepp_statements.html}.
+\bibitem{preproc} \emph{Options Controlling the Preprocessor}.
+  \url{http://gcc.gnu.org/onlinedocs/gcc-4.4.1/gcc/Preprocessor-Options.html}.
+\bibitem{stackoverflow} Stackoverflow. \emph{Various topics}.
   \url{http://stackoverflow.com}.
-  
+
 \end{thebibliography}
 
 
