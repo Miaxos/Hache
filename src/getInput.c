@@ -1,6 +1,6 @@
 # include <stdio.h>
 
-# define TAILLE_MAX 30
+# define TAILLE_MAX 1024
 
 // Copie dans input ce que l'utilisateur à saisi
 void getInput(char *input) {

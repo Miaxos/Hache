@@ -6,6 +6,17 @@
 
 #include "mypwd.h"
 
+#ifdef DYN
+typedef struct SCmd SCmd;
+typedef void (*pfunc)(int, char *[]);
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]));
+
+SCmd* Init(SCmd* s){
+	s = ModCmd(s, "mypwd", &executepwd);
+	return s;
+}
+#endif
+
 
 char NomRepertoire[1024];
 

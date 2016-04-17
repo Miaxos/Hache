@@ -24,17 +24,16 @@
 #include "../inc/functions.h"
 #include "../inc/socket.h"
 
-#ifdef EXEC
-
-#else
+#ifdef LIB
 int executepwd(int argc, char *argv[]);
 int executels(int argc, char *argv[]);
 int executedu(int argc, char *argv[]);
 int executemkdir(int argc, char *argv[]);
+int executecp(int argc, char*argv[]);
 #endif
 
 
-#define TAILLE_MAX 256
+#define TAILLE_MAX 1024
 
 typedef int (*pfunc)(int, char *[]);
 
@@ -71,6 +70,11 @@ pfunc GetFunction(SCmd* scmd){
 	return scmd->pf;
 }
 
+int clear(int argc, char *argv[]);
+int clear(int argc, char *argv[]){
+	printf("\033c");
+	return 0;
+}
 
 int main() {
 	/*
@@ -94,22 +98,25 @@ int main() {
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.");
 	}
 	chdir("bin");
+	#ifdef DYN
+	char *listelib[20];
+	#endif
+
 	SCmd* listeFonctions[TAILLE_MAX];
 	for (i=0 ; i<TAILLE_MAX; i++) {
 		listeFonctions[i] = AddCmd();
-		#ifdef EXEC
-
-		#else
-		ModCmd(listeFonctions[i], "mypwd", &executepwd);
+		
+		#ifdef LIB
+		ModCmd(listeFonctions[i], "blblblbl", &clear);
 		#endif
 	}
-#ifdef EXEC
-
-#else
+#ifdef LIB
 	listeFonctions[0] = ModCmd(listeFonctions[0], "mypwd", &executepwd);
 	listeFonctions[1] = ModCmd(listeFonctions[1], "myls", &executels);
 	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
 	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
+	listeFonctions[4] = ModCmd(listeFonctions[4], "mycp", &executecp);
+
 #endif
 	//listeFonctions[1] = AddCmd("myls", &executels);
 	//listeFonctions[2] = AddCmd("mymkdir", &executemkdir);
