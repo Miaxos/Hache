@@ -60,7 +60,7 @@ int callFunction(int argc, char **argv, char *workingdirlib, SCmd* tabcommandes[
 		while(i < TAILLE_MAX) {
 			if (!strcmp(argv[0], GetName(tabcommandes[i]))) {
 				status = (GetFunction(tabcommandes[i]))(argc, argv);
-				exit(status);
+				exit(1);
 			}
 			i++;
 		}

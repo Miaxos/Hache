@@ -301,8 +301,9 @@ int main() {
 			// Cependant ils auront tous le même environnement de travail.
 			// Si un change de dossier avec un cd, cela affectera l'ensemble des utilisateurs connectés à distance.
 
-			shutdown(new_socket, 0);
 			fflush(stdout);
+
+			shutdown(new_socket, 0);
 			listen(my_socket,5);
 			clearerr(stdout);
 			clearerr(stderr);
@@ -513,7 +514,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 									printf("Erreur dans la reception des données:\n");
 									break;
 								}
-								shutdown(sockfd,0); // ~= close(sockfd)
+								shutdown(sockfd,1); // ~= close(sockfd)
 								break;
 							}
 							n = write(sockfd, buffer, strlen(buffer));
