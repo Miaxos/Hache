@@ -193,7 +193,6 @@ int main() {
 				check = 0;
 			}
 		}
-		
 		// Mode écoute (second argument: la queue).
 		listen(my_socket,5);
 		clilen = sizeof(struct sockaddr_in);
@@ -227,8 +226,10 @@ int main() {
 			}
 			i = 0;
 			getcwd(workingdir, 1024); // On récupère le répertoire de travail.
-			printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
-			fflush(stdout);
+			if (child != 0) {
+				printf("prompt1.0: %s> ", workingdir); // Affichage du Shell
+				fflush(stdout);
+			}
 			if(child == 0) {
 				// Si on est dans le fils, alors on va attendre que quelqu'un se connecte.
 				new_socket = accept(my_socket, (struct sockaddr *)&client, (socklen_t*)&clilen);
