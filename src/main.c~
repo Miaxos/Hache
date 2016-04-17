@@ -30,7 +30,6 @@ int executels(int argc, char *argv[]);
 int executedu(int argc, char *argv[]);
 int executemkdir(int argc, char *argv[]);
 int executecp(int argc, char*argv[]);
-int executemv(int argc, char*argv[]);
 #endif
 
 
@@ -98,20 +97,15 @@ int main() {
 	{
 		printf("Les librairies personnels ne sont pas chargés, merci d'indiquer le répertoire des executables dans la variable d'environnement PTERMINAL.\n");
 	}
-	else
-	{
-		printf("Hache - 1.0a\n");
-	}
 	chdir("bin");
 	#ifdef DYN
-	void *lib[6];
-	char *listelib[6];
+	void *lib[5];
+	char *listelib[5];
 	listelib[0] = "libmypwddyn.so";
 	listelib[1] = "libmylsdyn.so";
 	listelib[2] = "libmydudyn.so";
 	listelib[3] = "libmymkdirdyn.so";
 	listelib[4] = "libmycpdyn.so";
-	listelib[5] = "libmymvdyn.so";
 	#endif
 
 	SCmd* listeFonctions[TAILLE_MAX];
@@ -131,7 +125,6 @@ int main() {
 	listeFonctions[2] = ModCmd(listeFonctions[2], "mydu", &executedu);
 	listeFonctions[3] = ModCmd(listeFonctions[3], "mymkdir", &executemkdir);
 	listeFonctions[4] = ModCmd(listeFonctions[4], "mycp", &executecp);
-	listeFonctions[5] = ModCmd(listeFonctions[5], "mymv", &executemv);
 
 #endif
 
@@ -141,7 +134,7 @@ int main() {
 
 	pfInit Init;
 	i = 0;
-	while (i < 6) {
+	while (i < 5) {
 		if ((lib[i] = dlopen(listelib[i], RTLD_LAZY)) == NULL) {
 			printf("libintrouvable\n");
 			return 1; //erreur, lib introuvable
@@ -434,18 +427,18 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 			else if (andmode == 3)
 			{
 				// Dans le cas d'une redirection |
-				if (isEndPipe == 0) {
+				if (pipemode == 0) {
 					fflush(stdout);
 					fgetpos(stdout, &pos);
 					fd = dup(fileno(stdout));
 					freopen("temp", "w+", stdout);
-					isEndPipe = 1;
+					pipemode = 1;
 				} else {
 					fflush(stdout);
 					fgetpos(stdout, &pos);
 					fd = dup(fileno(stdin));
 					freopen("temp", "r", stdin);
-					isEndPipe = 0;
+					pipemode = 0;
 				}
 			}
 
@@ -477,7 +470,7 @@ int executerInput(char **tab, char *workingdirlib, pid_t child, SCmd* tabcommand
 			}
 			else if (andmode == 3)
 			{
-				if (isEndPipe == 0) {
+				if (pipemode == 0) {
 					fflush(stdin);
 					dup2(fd, fileno(stdin));
 		    			close(fd);

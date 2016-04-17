@@ -4,6 +4,7 @@ Build:
   script:
     - make all
     - make all-lib
+    - make all-lib-dyn
   only:
     - master
   tags:

@@ -1,7 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/stat.h>
+
+
+#ifdef DYN
+typedef struct SCmd SCmd;
+typedef int (*pfunc)(int, char *[]);
+int executemv(int argc, char *argv[]);
+struct SCmd
+{
+    char name[20];
+    char *nom;
+    pfunc pf;
+};
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]));
+SCmd* Init(SCmd* s);
+
+SCmd* ModCmd(SCmd* scmd, char *nom, int (*pf)(int, char *[]))
+{
+    scmd->nom = scmd->name;
+    strcpy(scmd->nom, nom);
+    scmd->pf = pf;
+
+    return scmd;
+}
+
+SCmd* Init(SCmd* s){
+    s = ModCmd(s, "mymv", &executemv);
+    return s;
+}
+#endif
 
 int mv(char  *oldP, char *newP)
 {
@@ -23,7 +54,7 @@ int mv(char  *oldP, char *newP)
 	return 0;
 }
 
-int main(int argc,char *argv[])
+int executemv(int argc, char *argv[])
 {
 	char *oldpath;
 	char *newpath;
@@ -58,3 +89,10 @@ int main(int argc,char *argv[])
 	}
 	return 0;
 }
+
+#ifdef EXEC
+int main(int argc,char *argv[])
+{
+	return executemv(argc, argv);
+}
+#endif

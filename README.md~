@@ -38,8 +38,6 @@ Codage de l’interpréteur de commande (type bash). Il doit:
 	- Prise en compte des opérateurs de redirection.
 	- Possibilité de se connecter en réseau avec une commande « connect » (Sorte de ssh).
 
-Pour toutes les fonctionnalités, consulter le fichier C.pdf situé dans Hache/tex/
-
 ### Commandes usuelles (MERIEM et AXEL)
 
 Codage des commandes de base que possède le shell Unix.
