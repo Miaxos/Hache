@@ -192,10 +192,10 @@
 \author{Anthony GRIFFON, Eliot CHAUVINEAU, Meriem EL QSIMI, Axel JUGUET}
 \maketitle
 
-Le but de ce document, est de fournir un compte rendu de notre projet, le compte rendu prendra la forme d'un manuel d'utilisation dÈtaillant les diffÈrentes fonctionnalitÈs de notre terminal, HACHE.
+Le but de ce document, est de fournir un compte rendu de notre projet, le compte rendu prendra la forme d'un manuel d'utilisation d√©taillant les diff√©rentes fonctionnalit√©s de notre terminal, HACHE.
 \newline
 \newline
-A la fin du document, il y a un chapitre o˘ chaque membre du projet fera un compte rendu personnel du projet.
+A la fin du document, il y a un chapitre o√π chaque membre du projet fera un compte rendu personnel du projet.
 
 
 \bigskip
@@ -203,14 +203,14 @@ A la fin du document, il y a un chapitre o˘ chaque membre du projet fera un comp
 
 \bigskip
 
-Le projet HACHE, est dÈcoupÈ en deux parties, chaque partie comporte deux membres. La premiËre Èquipe, chargÈ de s'occuper de la partie du terminal et de la mise en place de la compilation ‡ l'aide de librairies statiques et dynamiques en lui mÍme est composÈ de Anthony GRIFFON, et de Eliot CHAUVINEAU
+Le projet HACHE, est d√©coup√© en deux parties, chaque partie comporte deux membres. La premi√®re √©quipe, charg√© de s'occuper de la partie du terminal et de la mise en place de la compilation √† l'aide de librairies statiques et dynamiques en lui m√™me est compos√© de Anthony GRIFFON, et de Eliot CHAUVINEAU
 \newline
 \newline
-La seconde Èquipe, qui se charge des diffÈrentes commandes ‡ exÈcuter, se compose de Meriem EL QSIMI et Axel JUGUET.
+La seconde √©quipe, qui se charge des diff√©rentes commandes √† ex√©cuter, se compose de Meriem EL QSIMI et Axel JUGUET.
 \bigskip
 \starbreak
 \bigskip
-Notre projet se trouve sur le Gitlab de l'UniversitÈ de Nantes, ‡ l'adresse: \url{https://gitlab.univ-nantes.fr/E158196C/Hache}.
+Notre projet se trouve sur le Gitlab de l'Universit√© de Nantes, √† l'adresse: \url{https://gitlab.univ-nantes.fr/E158196C/Hache}.
 
 \newpage
 
@@ -218,56 +218,56 @@ Notre projet se trouve sur le Gitlab de l'UniversitÈ de Nantes, ‡ l'adresse: \ur
 \tableofcontents*
 
 \newpage
-\chapter{PremiËre utilisation du terminal}
+\chapter{Premi√®re utilisation du terminal}
 \label{cha:first-use}
 
 \section{Compilation du programme}
-Avant d'Ítre utilisÈ, le programme se doit d'Ítre compilÈ. Une fois les sources obtenues, ce placer dans le terminal usuel, et exÈcuter:
+Avant d'√™tre utilis√©, le programme se doit d'√™tre compil√©. Une fois les sources obtenues, ce placer dans le terminal usuel, et ex√©cuter:
 
 \begin{Verbatim}
 bash4.2$> make
 \end{Verbatim}
 
-La compilation peut se faire de diffÈrente faÁons, nous allons voir toutes les options possibles au make.
+La compilation peut se faire de diff√©rente fa√ßons, nous allons voir toutes les options possibles au make.
 
 \subsection{Avertissement}
-Le terminal peut utiliser des librairies et fonctions non utilisÈ sous les systËmes WINDOWS©, le logiciel a ÈtÈ testÈ sous UBUNTU 14.04 et OS X 10.11.2.
+Le terminal peut utiliser des librairies et fonctions non utilis√© sous les syst√®mes WINDOWS¬©, le logiciel a √©t√© test√© sous UBUNTU 14.04 et OS X 10.11.2.
 \newline
-La compilation du programme nÈcessite la prÈsence du compilateur GCC >= 4.8 ou CLANG >= 7.0.2.
+La compilation du programme n√©cessite la pr√©sence du compilateur GCC >= 4.8 ou CLANG >= 7.0.2.
 \newline
 \newline
 Le programme peut compiler sous d'autres versions de GCC ou CLANG, cependant, nous ne le garantissons pas.
 
 \subsection{Make all}
-En exÈcutant la commande "make all", le terminal ainsi que toutes les commandes attachÈes \hyperref[cha:terminal-all-cmd]{(Voir chapitre liÈ)} seront gÈnÈrÈs en mode exÈcutable. L'exÈcutable du terminal sera alors enregistrÈ dans le dossier "./bin/".
+En ex√©cutant la commande "make all", le terminal ainsi que toutes les commandes attach√©es \hyperref[cha:terminal-all-cmd]{(Voir chapitre li√©)} seront g√©n√©r√©s en mode ex√©cutable. L'ex√©cutable du terminal sera alors enregistr√© dans le dossier "./bin/".
 
 \subsection{Make all-lib}
-En exÈcutant la commande "make all-lib", le terminal ainsi que toutes les commandes attacheÈs \hyperref[cha:terminal-all-cmd]{(Voir chapitre liÈ)} seront gÈnÈrÈs en mode librairie statique. L'exÈcutable pourra Ítre dÈplacer n'importe ou, on aura pas besoin d'indiquer au terminal o˘ se trouvent les exÈcutables pour les exÈcuter.\newline
-On pourra cependant quand mÍme l'indiquer pour ajouter des exÈcutables.
+En ex√©cutant la commande "make all-lib", le terminal ainsi que toutes les commandes attache√©s \hyperref[cha:terminal-all-cmd]{(Voir chapitre li√©)} seront g√©n√©r√©s en mode librairie statique. L'ex√©cutable pourra √™tre d√©placer n'importe ou, on aura pas besoin d'indiquer au terminal o√π se trouvent les ex√©cutables pour les ex√©cuter.\newline
+On pourra cependant quand m√™me l'indiquer pour ajouter des ex√©cutables.
 
 \subsection{Make all-lib-dyn}
-En exÈcutant la commande "make all-lib-dyn", la compilation sera effectuÈ en mode librairies dynamiques, l'exÈcutable devra lire les commandes dans les fichiers .so compilÈs dans le dossier "lib". De cette faÁon, on pourra mettre ‡ jour les librairies sans pour autant avoir ‡ recompiler le terminal.
+En ex√©cutant la commande "make all-lib-dyn", la compilation sera effectu√© en mode librairies dynamiques, l'ex√©cutable devra lire les commandes dans les fichiers .so compil√©s dans le dossier "lib". De cette fa√ßon, on pourra mettre √† jour les librairies sans pour autant avoir √† recompiler le terminal.
 \newline
 
 
 
 \subsection{Make cmd}
-L'utilisation de cette commande va permettre la gÈnÈration des fichiers commandes disponible dans ce chapitre \hyperref[cha:terminal-all-cmd]{(Voir chapitre liÈ)}.
+L'utilisation de cette commande va permettre la g√©n√©ration des fichiers commandes disponible dans ce chapitre \hyperref[cha:terminal-all-cmd]{(Voir chapitre li√©)}.
 
 
 \subsection{Make proper}
-L'utilisation de cette commande entrainera la destruction de tous les fichiers gÈnÈrÈs ‡ la compilation du programme, que ce soit les fichiers .o dans le dossier "build" ou les exÈcutables gÈnÈrÈs qui n'ont pas ÈtÈ dÈplacÈ.
+L'utilisation de cette commande entrainera la destruction de tous les fichiers g√©n√©r√©s √† la compilation du programme, que ce soit les fichiers .o dans le dossier "build" ou les ex√©cutables g√©n√©r√©s qui n'ont pas √©t√© d√©plac√©.
 
 
 \subsection{Make clean}
-L'utilisation de cette commande entrainera la destruction de tous les fichiers gÈnÈrÈs ‡ la compilation du programme hormis les fichiers exÈcutables.
+L'utilisation de cette commande entrainera la destruction de tous les fichiers g√©n√©r√©s √† la compilation du programme hormis les fichiers ex√©cutables.
 
 \section{Mise en place des variables}
 \label{cha:section-variables}
-Une fois le programme compilÈ, si vous avez utilisÈ la compilation normale ou dynamiques, des exÈcutables ou des librairies sont gÈnÈrÈs pour certaines commandes \hyperref[cha:terminal-all-cmd]{(Voir chapitre liÈ)} et des chemins doivent Ítre spÈcifiÈs.
+Une fois le programme compil√©, si vous avez utilis√© la compilation normale ou dynamiques, des ex√©cutables ou des librairies sont g√©n√©r√©s pour certaines commandes \hyperref[cha:terminal-all-cmd]{(Voir chapitre li√©)} et des chemins doivent √™tre sp√©cifi√©s.
 \newline
 \newline
-Il est important pour notre terminal de spÈcifier l'emplacement de ces programmes. C'est pourquoi dans le rÈpertoire principal de HACHE, l‡ vous effectuez la commande "make", se trouve un script ‡ executer.
+Il est important pour notre terminal de sp√©cifier l'emplacement de ces programmes. C'est pourquoi dans le r√©pertoire principal de HACHE, l√† vous effectuez la commande "make", se trouve un script √† executer.
 
 \begin{Verbatim}[label={define\_variable.sh}]
 #!/bin/bash
@@ -277,48 +277,48 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)/lib
 export PTERMINAL=$(pwd)/commands
 \end{Verbatim}
 
-Ce script est ‡ exÈcuter ‡ l'aide de cette commande:
+Ce script est √† ex√©cuter √† l'aide de cette commande:
 
 \begin{Verbatim}[label={bash}]
 bash4.2$> . ./define_variable.sh"
 \end{Verbatim}
 
-\section{DÈmarrage du programme}
+\section{D√©marrage du programme}
 
-DÈmarrons maintenant le programme, une fois la compilation terminÈ, l'exÈcutable du programme se trouve dans le dossier "bin".
+D√©marrons maintenant le programme, une fois la compilation termin√©, l'ex√©cutable du programme se trouve dans le dossier "bin".
 
 \begin{Verbatim}[label={bash}]
 bash4.2$> cd bin
 bash4.2$> ./hache
 \end{Verbatim}
 
-Une fois le programme lancÈ vous devriez avoir cet affichage\footnote{Le port du serveur est alÈatoire entre 10000 et 20000.}:
+Une fois le programme lanc√© vous devriez avoir cet affichage\footnote{Le port du serveur est al√©atoire entre 10000 et 20000.}:
 
 \begin{Verbatim}[label={Hache}]
-Serveur lancÈ sur le port: 10719.
+Serveur lanc√© sur le port: 10719.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
-Si jamais vous avez le message: "Les librairies personnels ne sont pas chargÈs, merci d'indiquer le rÈpertoire des executables dans la variable d'environnement PTERMINAL." reportez vous ‡ \hyperref[cha:section-variables]{cette section}.
+Si jamais vous avez le message: "Les librairies personnels ne sont pas charg√©s, merci d'indiquer le r√©pertoire des executables dans la variable d'environnement PTERMINAL." reportez vous √† \hyperref[cha:section-variables]{cette section}.
 \newline
 \newline
 On peut observer qu'un serveur se lance sur un port, pour plus d'information, il faut regarder la commande "connect".
 \newline
 Nous avons aussi le fil d'Arianne qui s'affiche avant d'entrer les commandes.
 
-\chapter{Commandes liÈes au terminal}
+\chapter{Commandes li√©es au terminal}
 \label{cha:terminal-all-cmd}
 
-Nous allons lister et expliquer les commandes liÈes au terminal, ce sont les commandes qui ne sont pas exÈcutÈs par des programmes externes mais par le programme HACHE.
+Nous allons lister et expliquer les commandes li√©es au terminal, ce sont les commandes qui ne sont pas ex√©cut√©s par des programmes externes mais par le programme HACHE.
 
-\section{Se dÈplacer dans les dossiers (cd)}
-La premiËre de ces commandes concerne la capacitÈ ‡ naviguer entre diffÈrents dossiers, la commande "cd".
+\section{Se d√©placer dans les dossiers (cd)}
+La premi√®re de ces commandes concerne la capacit√© √† naviguer entre diff√©rents dossiers, la commande "cd".
 \newline
-Cette commande ne prend qu'une option: le dossier o˘ l'on veut aller.
+Cette commande ne prend qu'une option: le dossier o√π l'on veut aller.
 Voici quelques exemples de la commande.
 \newline
 \begin{Verbatim}[label={Hache}]
-Serveur lancÈ sur le port: 10719.
+Serveur lanc√© sur le port: 10719.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> cd ..
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/> cd
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/> cd lizejdelzmdjkezmdk
@@ -326,15 +326,15 @@ Erreur:: No such file or directory
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/>
 \end{Verbatim}
 
-\section{Effacer le rÈsultats des prÈcÈdentes commandes (clear)}
-Il s'agit d'une commande n'ayant pour objectif qu'une meilleure visibilitÈ. Cette commande permet d'effacer toutes les commandes et tous les rÈsultats entrÈs prÈcÈdemment pour qu'il ne reste plus qu'une ligne sur le terminal.
+\section{Effacer le r√©sultats des pr√©c√©dentes commandes (clear)}
+Il s'agit d'une commande n'ayant pour objectif qu'une meilleure visibilit√©. Cette commande permet d'effacer toutes les commandes et tous les r√©sultats entr√©s pr√©c√©demment pour qu'il ne reste plus qu'une ligne sur le terminal.
 \newline
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Quitter le terminal (exit)}
-Pour quitter le programme HACHE, il suffit d'entrer cette commande, le programme va alors quitter, le serveur de connection ‡ distance va se stopper et vous allez retourner ‡ votre prÈcÈdent programme.
+Pour quitter le programme HACHE, il suffit d'entrer cette commande, le programme va alors quitter, le serveur de connection √† distance va se stopper et vous allez retourner √† votre pr√©c√©dent programme.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> exit
@@ -342,35 +342,35 @@ Au revoir !
 \end{Verbatim}
 
 
-\section{Se connecter ‡ un serveur distant (connect)}
+\section{Se connecter √† un serveur distant (connect)}
 \label{se:connect}
 
-Cette commande permet de se connecter ‡ d'autre terminaux HACHE ‡ distance, la connection n'est pas sÈcurisÈ. On Èvitera de transmettre des donnÈes sensibles via cette commande.
+Cette commande permet de se connecter √† d'autre terminaux HACHE √† distance, la connection n'est pas s√©curis√©. On √©vitera de transmettre des donn√©es sensibles via cette commande.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect
 Utilisation: connect host port.
 \end{Verbatim}
 
-Deux arguments doivent Ítre renseignÈ pour cette commande.
+Deux arguments doivent √™tre renseign√© pour cette commande.
 
-\subsection{L'hÙte}
-Le premier argument ‡ Ítre donnÈ est l'hÙte, il peut Ítre sous la forme d'une adresse IP (192.168.1.23) ou alors d'un nom de domaine (http://perdu.com).
+\subsection{L'h√¥te}
+Le premier argument √† √™tre donn√© est l'h√¥te, il peut √™tre sous la forme d'une adresse IP (192.168.1.23) ou alors d'un nom de domaine (http://perdu.com).
 
-Le programme est capable d'atteindre l'hÙte mÍme en renseignant un domaine ou une adresse internet, cependant, il est prÈfÈrable de privilÈgier l'adresse IP.
+Le programme est capable d'atteindre l'h√¥te m√™me en renseignant un domaine ou une adresse internet, cependant, il est pr√©f√©rable de privil√©gier l'adresse IP.
 
 \subsection{Le port}
-Le port ‡ Ítre renseignÈ est affichÈ sur le serveur auquel vous souhaitez vous connecter. Le port d'Ècoute du serveur s'affiche lors du dÈmarrage d'un terminal HACHE.
+Le port √† √™tre renseign√© est affich√© sur le serveur auquel vous souhaitez vous connecter. Le port d'√©coute du serveur s'affiche lors du d√©marrage d'un terminal HACHE.
 
 \subsection{La connection}
-Le principe de connection au serveur est diffÈrent des protocoles normaux, lorsque vous rentre la commande connect avec les paramËtres et que vous lancez la commande, cela ne vous connecte pas. Le terminal se met en mode passif, il va attendre les requÍtes que vous voulez envoyer au serveur distant.
+Le principe de connection au serveur est diff√©rent des protocoles normaux, lorsque vous rentre la commande connect avec les param√®tres et que vous lancez la commande, cela ne vous connecte pas. Le terminal se met en mode passif, il va attendre les requ√™tes que vous voulez envoyer au serveur distant.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
 prompt-dp$>
 \end{Verbatim}
 
-Pour envoyer une requÍte au serveur, il ne vous reste qu'‡ taper la commande et appuyer sur entrÈe.
+Pour envoyer une requ√™te au serveur, il ne vous reste qu'√† taper la commande et appuyer sur entr√©e.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
@@ -380,13 +380,13 @@ prompt-dp$>
 \end{Verbatim}
 
 \subsection{Multi-utilisateurs}
-On peut se demander pourquoi le systËme est construit de cette faÁon, lors de la conception nous avons voulu privilÈgier un systËme qui permet ‡ un serveur d'accepter plusieurs clients en mÍme temps sans avoir ‡ multiplier les systËmes d'Ècoutes sur le serveur.
+On peut se demander pourquoi le syst√®me est construit de cette fa√ßon, lors de la conception nous avons voulu privil√©gier un syst√®me qui permet √† un serveur d'accepter plusieurs clients en m√™me temps sans avoir √† multiplier les syst√®mes d'√©coutes sur le serveur.
 \newline
 \newline
-C'est dans cette optique que nous est venu cette conception particuliËre, avec laquelle il est possible de connecter plusieurs utilisateurs sur le mÍme serveur distant.
+C'est dans cette optique que nous est venu cette conception particuli√®re, avec laquelle il est possible de connecter plusieurs utilisateurs sur le m√™me serveur distant.
 
-\subsection{Quitter le mode connectÈ}
-Pour quitter le mode connectÈ, il suffit de taper la commande "exit".
+\subsection{Quitter le mode connect√©}
+Pour quitter le mode connect√©, il suffit de taper la commande "exit".
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> connect localhost 12345
@@ -397,50 +397,50 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \newpage
 \chapter{Le langage du terminal}
 \label{cha:langage}
-Dans ce chapitre nous allons aborder le langage du terminal, ces diffÈrentes possibilitÈs pour taper des lignes de commandes plus ou moins complexes.
+Dans ce chapitre nous allons aborder le langage du terminal, ces diff√©rentes possibilit√©s pour taper des lignes de commandes plus ou moins complexes.
 
-\section{PrioritÈs}
-Notre terminal est tel que on ne peut pas grouper les commandes dans des parenthËses, il va lire la ligne de gauche ‡ droite dans l'ordre sans se soucier de groupes de commandes.
+\section{Priorit√©s}
+Notre terminal est tel que on ne peut pas grouper les commandes dans des parenth√®ses, il va lire la ligne de gauche √† droite dans l'ordre sans se soucier de groupes de commandes.
 
 
 \section{Les redirection}
-Nous allons voir les redirections, les redirections permettent d'orienter les programmes. Par exemple, si nous donnons le un poËme Ècrit par Nabila l'entrÈe de notre programme de traduction et que nous orientons la sortie sur un fichier texte, nous allons avoir dans ce fichier texte, le poËme, lisible.
+Nous allons voir les redirections, les redirections permettent d'orienter les programmes. Par exemple, si nous donnons le un po√®me √©crit par Nabila l'entr√©e de notre programme de traduction et que nous orientons la sortie sur un fichier texte, nous allons avoir dans ce fichier texte, le po√®me, lisible.
 \newline
 \newline
 Avec HACHE il est possible de:
 \begin{itemize}
 \item[-]Rediriger la sortie d'une commande vers un fichier.
-\item[-]Ajouter la sortie d'une commande ‡ la fin d'un fichier.
-\item[-]Rediriger le contenu d'un fichier vers l'entrÈe d'une commande.
+\item[-]Ajouter la sortie d'une commande √† la fin d'un fichier.
+\item[-]Rediriger le contenu d'un fichier vers l'entr√©e d'une commande.
 \end{itemize}
 
 \subsection{Rediriger la sortie d'une commande vers un fichier}
-Il est possible de rediriger la sortie d'une commande vers un fichier avec l'opÈrateur ">".
+Il est possible de rediriger la sortie d'une commande vers un fichier avec l'op√©rateur ">".
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo "Youhou" > file.txt
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
-Le rÈsultat se trouve alors dans le fichier file.txt
+Le r√©sultat se trouve alors dans le fichier file.txt
 \begin{Verbatim}[label={file.txt}]
 "Youhou"
 \end{Verbatim}
 
-\subsection{Ajouter la sortie d'une commande ‡ la fin d'un fichier}
-Il est aussi possible d'ajouter ‡ la suite d'un fichier la sortie d'une commande avec l'opÈrateur ">>".
+\subsection{Ajouter la sortie d'une commande √† la fin d'un fichier}
+Il est aussi possible d'ajouter √† la suite d'un fichier la sortie d'une commande avec l'op√©rateur ">>".
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo "Youhou" > file.txt
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo suite >> file.txt
 \end{Verbatim}
-Le rÈsultat se trouve alors dans le fichier file.txt
+Le r√©sultat se trouve alors dans le fichier file.txt
 \begin{Verbatim}[label={file.txt}]
 "Youhou"
 suite
 \end{Verbatim}
 
-\subsection{Rediriger le contenu d'un fichier vers l'entrÈe d'une commande}
-Dans certaines commandes il peut Ítre utile de remplacer l'entrÈe standard par un fichier, il est possible de le faire avec "<".
+\subsection{Rediriger le contenu d'un fichier vers l'entr√©e d'une commande}
+Dans certaines commandes il peut √™tre utile de remplacer l'entr√©e standard par un fichier, il est possible de le faire avec "<".
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> cat < file.txt
@@ -451,9 +451,9 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 
 
 \section{La pipe}
-Pour connecter la sortie d'une commande sur l'entrÈe dune autre, avec les redirections, il est nÈcessaire de diriger la sortie d'une commande vers un fichier et rediriger le fichier vers l'entrÈ de la commande.
+Pour connecter la sortie d'une commande sur l'entr√©e dune autre, avec les redirections, il est n√©cessaire de diriger la sortie d'une commande vers un fichier et rediriger le fichier vers l'entr√© de la commande.
 \newline
-Cette manipulation peut s'Ècrire en une ligne avec le pipe "|".
+Cette manipulation peut s'√©crire en une ligne avec le pipe "|".
 \newline
 Pour l'instant, notre shell ne supporte qu'une seule redirection par commande saisie. Ainsi, ls test | grep test2 > test3 ne fonctionnera pas.
 \newline
@@ -463,21 +463,21 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls -l | grep README.md
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
-\section{Les opÈrateurs logiques}
-Il est possible de complexifier les commandes avec les opÈrateurs logiques "et" et "ou".
+\section{Les op√©rateurs logiques}
+Il est possible de complexifier les commandes avec les op√©rateurs logiques "et" et "ou".
 \newline
-Chaque programme exÈcutÈ se termine en renvoyant un code de sortie, il s'agit soit d'un code d'erreur soit d'un code de "rÈussite" (le code d'erreur 0).
+Chaque programme ex√©cut√© se termine en renvoyant un code de sortie, il s'agit soit d'un code d'erreur soit d'un code de "r√©ussite" (le code d'erreur 0).
 \newline
-\subsection{L'opÈrateur ET}
-L'opÈrateur "ET" est symbolisÈ par "\&\&" dans HACHE.
+\subsection{L'op√©rateur ET}
+L'op√©rateur "ET" est symbolis√© par "\&\&" dans HACHE.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls && pwd
 \end{Verbatim}
 
-Ici la commande ls s'exÈcute en premiËre, si elle s'exÈcute sans erreur, alors la commande pwd s'execute ‡ son tour, si jamais ce n'est pas le cas, la commande pwd ne s'exÈcute pas.
+Ici la commande ls s'ex√©cute en premi√®re, si elle s'ex√©cute sans erreur, alors la commande pwd s'execute √† son tour, si jamais ce n'est pas le cas, la commande pwd ne s'ex√©cute pas.
 \newline
-Voici diffÈrents exemples:
+Voici diff√©rents exemples:
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> echo 1 && pwd
 1
@@ -492,14 +492,14 @@ ls: ldezkdj: No such file or directory
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
-\subsection{L'opÈrateur OU}
-L'opÈrateur "OU" est symbolisÈ par "||" dans HACHE.
+\subsection{L'op√©rateur OU}
+L'op√©rateur "OU" est symbolis√© par "||" dans HACHE.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> ls || pwd
 \end{Verbatim}
 
-Ici la commande ls s'exÈcute avec succËs, de ce fait la commande pwd ne s'exÈcutera pas.
+Ici la commande ls s'ex√©cute avec succ√®s, de ce fait la commande pwd ne s'ex√©cutera pas.
 Quelques exemples:
 
 \begin{Verbatim}[label={Hache}]
@@ -514,7 +514,7 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
 \section{Les taches de fonds}
-Le terminal HACHE permet d'exÈcuter les commandes en tache de fond. Pour ce faire, il suffit d'utiliser l'opÈrateur \& en fin de ligne.
+Le terminal HACHE permet d'ex√©cuter les commandes en tache de fond. Pour ce faire, il suffit d'utiliser l'op√©rateur \& en fin de ligne.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
@@ -522,7 +522,7 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 \end{Verbatim}
 
-Ici, les commandes vont s'exÈcuter dans un terminal HACHE avec pour PID 22233. Cependant tout ce qui s'affiche dans la commande en tache de fond s'affiche dans le terminal actuel.
+Ici, les commandes vont s'ex√©cuter dans un terminal HACHE avec pour PID 22233. Cependant tout ce qui s'affiche dans la commande en tache de fond s'affiche dans le terminal actuel.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> sleep 5 && myls &
@@ -539,10 +539,10 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin>
 
 \end{Verbatim}
 
-\chapter{Les diffÈrentes commandes}
+\chapter{Les diff√©rentes commandes}
 
 \section{Afficher le contenu d'un dossier (myls)}
-La commande myls affiche le contenu du rÈpertoire courant. Aucune options.
+La commande myls affiche le contenu du r√©pertoire courant. Aucune options.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> myls
@@ -567,16 +567,16 @@ prompt1.0: /Users/anthonygriffon/Desktop/Hache>
 \section{Bouger les fichiers (mymv)}
 La commande mymv permet de changer le chemin d'un fichier.
 
-\section{CrÈer des dossiers (mymkdir)}
-La commande mymkdir permet de crÈer un dossier.
+\section{Cr√©er des dossiers (mymkdir)}
+La commande mymkdir permet de cr√©er un dossier.
 
 
 
-\section{Afficher le rÈpertoire courant (mypwd)}
+\section{Afficher le r√©pertoire courant (mypwd)}
 
 
 \section{Afficher (mydu)}
-Affiche le nombre d'octets occupÈs dans le rÈpertoire courant.
+Affiche le nombre d'octets occup√©s dans le r√©pertoire courant.
 
 \begin{Verbatim}[label={Hache}]
 prompt1.0: /Users/anthonygriffon/Desktop> mydu
@@ -642,7 +642,7 @@ Checking src/socket.h...
 
 
 \section{Valgrind}
-Voici un rapport valgrind de HACHE aprËs une utilisation de quelques commandes personnelles (myls, mykdir, mydu, mypwd, exit).
+Voici un rapport valgrind de HACHE apr√®s une utilisation de quelques commandes personnelles (myls, mykdir, mydu, mypwd, exit).
 
 
 \begin{Verbatim}[label={valgrind ./Hache > log.txt 2>\&1}]
@@ -651,12 +651,12 @@ Voici un rapport valgrind de HACHE aprËs une utilisation de quelques commandes p
 ==22326== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
 ==22326== Command: ./Hache
 ==22326==
-Les librairies personnels ne sont pas chargÈs, merci d'indiquer le rÈpertoire des
+Les librairies personnels ne sont pas charg√©s, merci d'indiquer le r√©pertoire des
 executablesdans la variable d'environnement PTERMINAL.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> Les librairies personnels ne sont pas
-chargÈs, merci d'indiquer le rÈpertoire des executables dans la variable d'environnement
+charg√©s, merci d'indiquer le r√©pertoire des executables dans la variable d'environnement
 PTERMINAL
-Serveur lancÈ sur le port: 19015.
+Serveur lanc√© sur le port: 19015.
 prompt1.0: /Users/anthonygriffon/Desktop/Hache/bin> myls
 --22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option
 --22328-- UNKNOWN mach_msg unhandled MACH_SEND_TRAILER option (repeated 2 times)
@@ -756,44 +756,61 @@ Au revoir !
 ==22326== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 \end{Verbatim}
 
-On peut observer ‡ la sortie 3,246,795 bytes utilisÈ, et seulement 5,120 bytes de fuite dans l'application, d'aprËs le programme des optimisations sont encore possibles, on peut aussi remarquer quelques problËmes dans le myls.
+On peut observer √† la sortie 3,246,795 bytes utilis√©, et seulement 5,120 bytes de fuite dans l'application, d'apr√®s le programme des optimisations sont encore possibles, on peut aussi remarquer quelques probl√®mes dans le myls.
 
 
 \chapter{Compte-rendus personnels}
 \section{Anthony GRIFFON}
 
-A travers le projet, on a pu dÈcouvrir de nouvelles utilisation du C. Un projet tel que le terminal est pratique car on peut observer le programme tel qu'il devrait Ítre et essayer de construire notre propre version. Il s'agit surtout de reproduction, mais cela permet de se poser pas mal de questions.
+A travers le projet, on a pu d√©couvrir de nouvelles utilisation du C. Un projet tel que le terminal est pratique car on peut observer le programme tel qu'il devrait √™tre et essayer de construire notre propre version. Il s'agit surtout de reproduction, mais cela permet de se poser pas mal de questions.
 \newline
 \newline
-On remarque aussi toute l'importance de la conception initiale d'un projet. Il ne faut pas trop rapidement passer au code ou on peut se retrouver confrontÈ ‡ des problËmes difficiles ‡ rÈsoudre.
+On remarque aussi toute l'importance de la conception initiale d'un projet. Il ne faut pas trop rapidement passer au code ou on peut se retrouver confront√© √† des probl√®mes difficiles √† r√©soudre.
 \newline
 \newline
-Dans notre cas, nous avons pensÈ tardivement ‡ la possibilitÈ de grouper des commandes avec les parenthËses et la gestion de prioritÈs. Il Ètait trop tard pour tout changer mais cependant, cela nous a permis de nous rendre compte que notre conception initiale avait des lacunes.
+Dans notre cas, nous avons pens√© tardivement √† la possibilit√© de grouper des commandes avec les parenth√®ses et la gestion de priorit√©s. Il √©tait trop tard pour tout changer mais cependant, cela nous a permis de nous rendre compte que notre conception initiale avait des lacunes.
 \newline
 
 \bigskip
 \starbreak
 \section{Eliot CHAUVINEAU}
 
-Ce projet mÈlange habilement toutes les notions de programmation/systËme que nous avons apprises durant nos cours de C/systËme. C'est un bon exercice de programmation mais aussi et surtout de conception, et d'organisation en Èquipe. On ne peut pas se lancer dans le code tÍte baissÈe sans avoir rÈflÈchi en groupe ‡ la conception du programme.
+Ce projet m√©lange habilement toutes les notions de programmation/syst√®me que nous avons apprises durant nos cours de C/syst√®me. C'est un bon exercice de programmation mais aussi et surtout de conception, et d'organisation en √©quipe. On ne peut pas se lancer dans le code t√™te baiss√©e sans avoir r√©fl√©chi en groupe √† la conception du programme.
 \newline
 \newline
-Malheureusement nous n'avons pas pu implÈmenter toutes les fonctions que nous voulions apporter ‡ notre shell. Nous n'avons pas pris assez de temps ‡ rÈflÈchir ensemble ‡ sa conceptions avant de commencer ‡ programmer. Les problËmes sont arrivÈs ‡ la fin, et il Ètait trop tard pour changer la conception de notre shell.
+Malheureusement nous n'avons pas pu impl√©menter toutes les fonctions que nous voulions apporter √† notre shell. Nous n'avons pas pris assez de temps √† r√©fl√©chir ensemble √† sa conceptions avant de commencer √† programmer. Les probl√®mes sont arriv√©s √† la fin, et il √©tait trop tard pour changer la conception de notre shell.
 \newline
 
 \bigskip
 \starbreak
 \section{Meriem EL QSIMI}
-Le projet s'est rÈvÈlÈ trËs enrichissant, il nous a permis de dÈcouvrir comment fonctionnent les commandes linux.
+Le projet s'est r√©v√©l√© tr√®s enrichissant, il nous a permis de d√©couvrir comment fonctionnent les commandes linux.
 \newline
 \newline
 De plus, il nous a permis d'appliquer nos connaissances en langage C.
 \newline
 \newline
-Les principaux problËmes, que nous avons rencontrÈs, concernaient la conception initiale du projet, nous avons directement commencÈ le code. Ainsi, j'ai eu au dÈbut quelques problËmes en utilisant le git sous windows.
+Les principaux probl√®mes, que nous avons rencontr√©s, concernaient la conception initiale du projet, nous avons directement commenc√© le code. Ainsi, j'ai eu au d√©but quelques probl√®mes en utilisant le git sous windows.
 \bigskip
 \starbreak
 \section{Axel JUGUET}
+Tout d'abord ce projet √©tait int√©ressant dans sa conception pour plusieurs points : 
+\newline
+\newline 
+- Utilisation des appels systemes d√©j√† appris et d√©couverte de nouveaux
+\newline 
+\newline 
+- Creation d'un programme autonome et am√©liorable par la suite
+\newline 
+\newline 
+- Tr√®s diff√©rent de ce qu'on a pu faire jusque l√†
+\newline 
+\newline 
+Pour ma part, ce projet m'a permis de me rendre compte de certaines lacunes en programmation C ainsi que dans mon organisation. J'ai pass√© beaucoup de temps √† chercher et √† fouiller dans la documentation UNIX pour comprendre le fonctionnement de certains appels systeme (tels que rename qui m'a pos√© beaucoup de probl√®mes ). J'ai en revanche beaucoup mieux compris le fonctionnement des pointeurs, chose qui me paraissait encore un peu floue avant le projet.
+\newline
+\newline 
+Pour ce qui est des probl√®mes rencontr√©s, mis √† part mes probl√®mes de codage, j'ai rencontr√© de nombreuses difficult√©s √† cause de git notamment vis √† vis du merge. Je n'ai pas pu donc commit la commande mymv que j'avais cod√©e.
+\newline 
 
 \bigskip
 \starbreak
@@ -803,7 +820,7 @@ Les principaux problËmes, que nous avons rencontrÈs, concernaient la conception 
 \bibitem{larsmadsen} Lars Madsen, \emph{Various chapter styles for the memoir class}, 2011.
 \bibitem{memman} Peter Wilson, \emph{The Memoir Class for Configurable
   Typesetting -- User Guide}, 2010.
-\bibitem{ens} BasÈ sur un polycopiÈ de Roberto Di Cosmo, Xavier Leroy et Damien Doligez. \emph{EntrÈe, sortie, redirection}.
+\bibitem{ens} Bas√© sur un polycopi√© de Roberto Di Cosmo, Xavier Leroy et Damien Doligez. \emph{Entr√©e, sortie, redirection}.
   \url{http://www.tuteurs.ens.fr/unix/shell/entreesortie.html}.
   \bibitem{makepp} \emph{Various statements in a makefile}.
   \url{ http://makepp.sourceforge.net/1.19/makepp_statements.html}.
